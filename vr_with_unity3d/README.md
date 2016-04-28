@@ -2,7 +2,7 @@
 
 ### 1. 개발환경 설치
 * [Unity 설치](setup/install_unity3d.md)
-* Android SDK 설치
+* [Android SDK 설치](setup/install_android_sdk.md)
 * Unity 개발환경 설정
 
 ## 콘텐츠 이용
