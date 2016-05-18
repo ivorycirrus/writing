@@ -84,6 +84,81 @@ VR을 표현하기위한 3D 렌더링 방법 또한 앞서 설명한 Camera, Vie
 ![stereo camera](https://developer.oculus.com/images/documentation/intro-vr/latest/inter-camera-distance.png)
 
 ## 3. Motion Tracking
+사람의 몸의 움직임은 3방향의 이동과 3방향의 회번으로 구성된 6개의 파리메터로 정의 할 수 있다. VR이 사용자의 시점에 따른 화면전환을 하고자 할 경우 이러한 사용자의 움직임을 고려해야 한다.
+하지만 VR 애플리케이션이 보여주는 모든 장면에 Motion Tracking이 필요하지 않을 수 있으며, 또한 이러한 시점의 전환및 시야의 방향을 제어하기 위해 사용자에게 불편한 동작을 요구하지 않도록 프로그램을 설계해야 할 것이다.
+
+![cardboard_headtracking](https://material-design.storage.googleapis.com/publish/vr_v_1/vrexternal/0B7WCemMG6e0VN0pfZ1lGS0JBMFk/physiologicalconsiderations_headtracking.png)
+
+#### 시점의 자유도 (Defrees of freedom)
+VR을 구현하는 HMD 기기에 따라 지원하는 시점의 자유도가 다를 수 있으며, 시점의 자유도는 다음과 같이 구분 할 수 있다.
+
+##### 3 Degrees of freedom (Orientation tracking)
+스마트폰 기반의 대부분의 HMD기기(Geer VR, Cardboard, etc..)는 3축의 모션자유도(3DOF)를 가진다. 이 때 지원하는 움직임은 아래 그림과 같이 x,y,z축 방향의 회전(rotation)에 대한 정보를 포함한다.
+
+![3dof](https://d262ilb51hltx0.cloudfront.net/max/1600/1*bJQluIkWyg3HX2XSCS98CA.jpeg)
+
+##### 6 Degrees of freedom (Orientation + Position tracking)
+Oculus Rift 또는 HTC Vive와 같이 고사양의 VR기기는 앞서 언급한 3축 모션자유도와 함께 사용자의 위치(transform)에 따른 3가지정보를 포함하는 6축의 모션자유도(6DOF)를 제공한다.
+
+![6dof](https://d262ilb51hltx0.cloudfront.net/max/1600/1*sNTxX9iMJnE0oWybyTHNBw.jpeg)
+
+이 6축의 모션자유도를 지원하기 위해서 Oculus Rift와 HTC Vive는 별도의 적외선 입력장치를 이용하고 있다. 아래의 첫번째 그림은 Oculus Rift의 적외선 센서 배치이며, 두번째 그림은 HTC Vive의 적외선센서의 배치를 표현하고 있다.
+
+![sendor_oculus](https://d262ilb51hltx0.cloudfront.net/max/1200/1*v-ClTzahcgH9IMJtZR3BAQ.jpeg)
+
+![sensor_vive](https://d262ilb51hltx0.cloudfront.net/max/1200/1*q_mrMtR0g8KGhedW6bzNKw.jpeg)
+
+#### Motion Tracking (via Google Cardboard)
+Google Cardboard SDK에는 GyroSensor를 이용할 수 있는 API를 제공하고 있다. 만일 Unity 3D를 이용하여 Cardboard VR 애플리케이션을 개발한다면, 다음과 같이 GyroSensor값을 이용한 HeadTracking을 구현 할 수 있을 것이다.
+```C#
+// Ref : http://answers.unity3d.com/questions/985989/google-cardboard-not-move-the-camera-when-im-using.html#answer-1092005
+// Platform : Cardboard SDK 0.5.2 / Unity 3D (C#)
+ #if UNITY_EDITOR
+
+ using UnityEngine; 
+ using System.Collections;
+
+ public class GyroscopeEnable : MonoBehaviour
+ {    
+    private Gyroscope gyro;
+
+     void Start ()
+     {
+         if (SystemInfo.supportsGyroscope) {
+             gyro = Input.gyro;
+             gyro.enabled = true;
+         }
+     }
+ }
+
+ #endif
+```
+
+#### When does turn off morion tracking
+VR 애플리케이션을 개발하다 보면 Motion Tracking이 의도하지 않은 방향으로 동작하는 경우가 있다. 예를 들면, 리소스를 불러오든 도중에 Motion Tracking을 동작 할 경우 시스템자원 부족으로 인한 일시적인 성능 저하로 인해 사용자의 움직임이 Viewport에 실시간으로 적용되지 못해 잠깐씩 멈짓 하는 것처럼 보일 수 있다. 또 다른 경우, 메뉴 등의 2D 화면을 보여주고 있을 때에는 Motion Tracking이 오히려 사용성에 나쁜 영향을 줄 수도 있다. 따라서 Motion Tracking은 항상 적용하는 것이 아닌, 사용자에게 제공하는 장면(Scene)이 무엇인지를 고려하여 필요할 때에는 기능을 꺼 두는 것이 더 좋은 사용자 경험을 제공하는 방법이 될 수 있다.
+
+![2d_screen](https://material-design.storage.googleapis.com/publish/vr_v_1/vrexternal/0B7WCemMG6e0VUGlJT2s3WjQzYjg/physiologicalconsiderations_headtracking_2d.png)
+
+#### User experience
+VR 기기를 이용하는데 있어 사용자가 불편을 느끼는 것에는 여러 요소가 있을 수 있다. 일부 이용자들은 VR기기를 착용했을 때 어지러움을 느낄 수 있으며, 대부분의 VR기기가 HMD형태로 머리에 장착되어 시야를 가릴뿐 아니라 목에 부담을 줄 수 있다. 아래는 보다 편안한 사용자 경험을 제공하기 위해 고려해야 할 사항을 정리 한 것이다.
+
+##### 편한안 사용자 경험 제공
+Google I/O에서 [Alex의 발표 영상](https://youtu.be/Qwh1LBzz3AU?t=18m12s)을 요약하자면 VR애플리케이션의 향상된 사용자 경험을 위해서는 다음 두 가지를 고려해야 한다고 한다.
+
+* Frame drop을 유발하지 말 것
+* Head Tracking을 관리(maintain)할 것
+
+무거운 리소스 및 오브젝트의 사용으로 인해 화면의 재생빈도(FPS)가 떨어지거나, 과도한 Head Tracking으로 Viewport가 빈번하게 움직 일 경우 사용자가 어지러움을 느낄 확률이 올라간다. 따라서 VR애플리케이션을 개발 할 때에는 항상 영상의 품질과 기기의 성능 사이에서 적절한 타협점을 찾는 노력을 해야 할 것이다.
+
+##### HMD 착용자의 시점에 대한 고려
+일반적으로 사람의 시야는 모든 면에서 고른해상도를 보이지는 않는다. 아래 그림과 같이 주시방향에 가꾸운 쪽인 초록색으로 표시되는 영역을 인지할 때의 애상도가 더 높은 편이며, 붉은색 쪽으로 갈 수록 해상력이 떨어지게 된다. 따라서 주요한 오브젝트는 HMD의 전방 주시방향에 배치하고 시야 가장자리의 오브젝트의 제어를 지양하는 뱡향으로 애플리케이션을 개발해야 할 것이다.
+
+![fov](https://d262ilb51hltx0.cloudfront.net/max/1600/1*XJwTciYJOXlJMu62D1vDNw.jpeg)
+
+##### HMD 착용자의 자세에 대한 고려
+사람의 머리는 전체 체중대비 굉장히 무거운 편이다. 사람이 고개를 앞으로 숙이고 있을 경우 목에 상당한 부하가 작용하며 HMD기기를 착용하고 있을 경우 이는 더 큰 문제가 된다. 아래 그림은 머리의 각도에 따라 목에 가해지는 부하를 나타낸 그림으로, 30도 만큼 고개를 숙이고 있을 경우 40lbs(약 18.14kg)의 부하를 목이 지탱하고 있음을 보여준다. 사용자가 고개를 숙이고 있는 자세를 오래 요구 할 경우 애플리케이션을 이용할 때의 피로도가 증가함은 물론 이용자의 건강에 좋지 않은 영향을 줄 수 있다.
+
+![weight_hmd](https://d262ilb51hltx0.cloudfront.net/max/1600/1*TxrR4g5d6HZVhBN0nyRwcA.jpeg)
 
 ## References
 1. https://en.wikipedia.org/wiki/3D_computer_graphics
@@ -91,3 +166,5 @@ VR을 표현하기위한 3D 렌더링 방법 또한 앞서 설명한 Camera, Vie
 3. http://stackoverflow.com/questions/4262503/whats-the-difference-between-material-and-texture
 4. https://www.safaribooksonline.com/library/view/programming-3d-applications/9781449363918/ch01.html
 5. https://developer.oculus.com/documentation/intro-vr/latest/concepts/bp_app_imaging/
+6. https://www.google.com/design/spec-vr/designing-for-google-cardboard/physiological-considerations.html#
+7. https://medium.com/google-design/from-product-design-to-virtual-reality-be46fa793e9b#.g6nmtqex8
