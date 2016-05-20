@@ -79,7 +79,7 @@ ECMA-262 표준문서에서도 홑따옴표(single quote)와 쌍따옴표(double
 
 ECMA-262 표준문서의 예제코드 및 프로토타입 함수를 정의 할 때 사용된 문자열 상수의 표현을 보면 모두 쌍따옴표가 사용 된 것을 볼 수 있다. [String 객체의 생성자 정의](http://www.ecma-international.org/ecma-262/5.1/#sec-15.5.1.1)나 [String 객체의 split 함수정의](http://www.ecma-international.org/ecma-262/5.1/#sec-15.5.4.14)에 보면 문자열 상수를 표현하는데 아래 예시와 같이 쌍따옴표 만을 사용하고 있는 것을 볼 수 있다.
 
->15.5.1.1 String ( [ value ] )
+>**15.5.1.1 String ( [ value ] )** <br/>
     Returns a String value (not a String object) computed by ToString(value). If value is not supplied, the empty String "" is returned.
 
 이를 미루어 보면 공식적으로 정의되지는 않았지만, 자바스크립트 표준화 그룹에서는 문자열상수를 표현 할 때 쌍따옴표를 선호하고 있다고 볼 수 있을 것이다.
