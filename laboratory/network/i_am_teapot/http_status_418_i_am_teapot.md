@@ -32,3 +32,31 @@ IETF, 국제 인터넷 표준화 기구는 인터넷의 운영, 관리, 개발�
 >A Request for Comments (RFC) is a type of publication from the Internet Engineering Task Force (IETF) and the Internet Society (ISOC), usually describing methods, behaviors, research, or innovations applicable to the working of the Internet and Internet-connected systems.
 >
 >Almost every April Fools' Day (1 April) since 1989, the Internet RFC Editor has published one or more humorous Request for Comments (RFC) documents, following in the path blazed by the June 1973 RFC 527 called ARPAWOCKY, a parody of Lewis Carroll's nonsense poem "Jabberwocky". [The following list](https://en.wikipedia.org/wiki/April_Fools%27_Day_Request_for_Comments) also includes humorous RFCs published on other dates.
+
+## HTCPC의 구성
+찻주전자로 커피를 끓이기 위한 통신규약인 HTCPC는 IETF [RFC 2324](https://tools.ietf.org/html/rfc2324)에 정의되어 있으며, HTTP 통신을 기반으로 Method / Header / URI-scheme 등이 추가로 구성되어 있다.
+
+### Method
+
+- **```BREW``` 또는 ```POST``` 메소드**
+   - 커피를 끓이기 위한 메소드 이며, Content-Type으로 ```application/coffee-pot-command```을 가진다.
+   - 커피포트 서버에서는 BREW와 POST를 모두 지원해야 하며, POST를 통한 제어는 지양(deprecated)해야 한다.
+   - 커피포트는 전열기기로 불(fire)을 사용하지 않으니 네트워크 방화벽(firewall)구성 및 제어를 필요로 하지 않는다.
+   - POST 메소드는 커피의 상표를 서비스 하는 용도로 사용 할 수 있다.
+   - BREW 메소드는 추가로 제공되는 메소드이며, 다른 HTTP프로토콜에서도 사용 될 수 있다.
+      (예를 들면, Hyper Text Brewery Control Protocol 같은..)
+
+- **```GET``` 메소드**
+   - 커피포트에 대한 정보를 반환한다.
+   - 커피에 대한 정보가 없는 이유는 대부분의 커피 URI가 카페인을 포함하지 않기 때문이다.
+
+- **```PROPFIND``` 메소드**
+   - 커피에 대한 메타데이터를 제공한다.
+
+- **```WHEN``` 메소드**
+   - 커피를 따른 다음 우유를 추가로 따를 경우, 언제(when) 우유를 따르는 것을 멈출것인지에 대한 명령이다.
+   - 커피에 우유가 충분히 따라 진 경우 WHEN메소드를 호출하여 우유 따르는 동작을 중지 할 수 있다.
+
+### Header
+
+
