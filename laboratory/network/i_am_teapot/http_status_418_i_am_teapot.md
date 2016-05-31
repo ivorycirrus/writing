@@ -25,7 +25,7 @@
 ### IETF가 표준문서에 장난을?
 IETF, 국제 인터넷 표준화 기구는 인터넷의 운영, 관리, 개발에 대해 협의하고 프로토콜과 구조적인 사안들을 분석하는 인터넷 표준화 작업을 하는 국제기구이다. 이렇게 중요한 역할을 담당하는 국제기구가 국제표준으로 장난섞인 농담을 한다는 것은 쉽사리 상상이 되지 않는다.
 
-![real](https://namu.wiki/file/%ED%8C%8C%EC%9D%BC:%EA%B7%B8%EC%8B%A4%EC%9D%BC%20%EC%9D%B4%EB%A7%90%EB%85%84.png)
+![real](realreal.png)
 
 그렇다. 실제로 IETF가 RFC를 가지고 농담을 하고 있으며, 이는 오늘 내일의 문제가 아니다. 게다가 커피포트 제어 프로토콜 뿐만이 아닌 꽤 많은 수의 만우절 장난으로 발표한 문서가 있음을 알수 있다. 심지어 이에 대해서 위키피디아에는 [만우절 RFC](https://en.wikipedia.org/wiki/April_Fools%27_Day_Request_for_Comments)라는 항목이 실제로 존재하고 있다.
 
@@ -35,6 +35,8 @@ IETF, 국제 인터넷 표준화 기구는 인터넷의 운영, 관리, 개발�
 
 ## HTCPCP의 구성
 찻주전자로 커피를 끓이기 위한 통신규약인 HTCPCP는 IETF [RFC 2324](https://tools.ietf.org/html/rfc2324)에 정의되어 있으며, HTTP 통신을 기반으로 Method / Header / URI-scheme 등이 추가로 구성되어 있다.
+
+HTCPCP의 표준문서의 각 항목이 어떨게 구성되었는지 자세히 살펴보자. 아래는 HTCPCP에 대한 RFC2324에 대한 내용을 정리 한 것이다.
 
 ### Method
 
@@ -95,13 +97,73 @@ alcohol-type    = ( "Whisky" | "Rum" | "Kahlua" | "Aquavit" )
 
 - 406 Not Acceptable
    406 Not Acceptable 헤더는 일반적으로 '요청한 헤더에 정의된 컨텐츠의 특성이 실제 리소스에 적용될 수 없거나 처리될 수 없음'을 의미한다.
-   HTCPCP에서는 Accept-Additions 헤더를 통한 요청을 처리 할 수 없을 경우에 발생하는 오류코드이다.<br/>
-   이 406오류코드의를 정의하는 마지막 문장에는 '실제로는, 대부분의 자동커피머신은 이러한 추가작업을 수행 할 수 없다.' 라고 표현되어 있다.
-   이는 HTCPCP 1.0이 작성된 1998년 기준으로 자동 커피머신에서는 우유나 설탕을 사용자의 선택에때라 제공할 수 있는 기기가 없었던 것을 생각 할 수 있다.
-   이 글을 쓰고있는 2016년 현재에는 이 기능을 제공하는 커피머신이 존재하고 있으며, 이는 표준이 제정 될 당시 향후 추가될 기능 중 현재 미구현 항목에 대한 오류코드를 제시한 것으로 보인다.
+   HTCPCP에서는 Accept-Additions 헤더를 통한 요청을 처리 할 수 없을 경우에 발생하는 오류코드이다.
 
 - 418 I'm a teapot
    서비스를 제공하는 서버가 커피포트입을 알리는 오류코드. 응답 바디에 [short and stout](https://en.wikipedia.org/wiki/I%27m_a_Little_Teapot)라는 커피포트 노래를 포함 할 수 있다.
 
 ### URI Scheme
+커피는 세게적인 음료이기 때문에 커피에 대한 URI-scheme 또한 다국어를 지원하고 있다.
 
+URI가 어떤 언어로 표현되든지 모두 동일한 의미를 지닌다. URI가 ANSI문자로 표현 할 수 없는 경우 인코딩 된 문자로 표현한다. URI에 사용된 문자는 대소문자를 구분하지 않는데 독일어 'Kaffee'라는 단어는 K가 대문자로 표현되는 것이 중요하기에 특별히 인코딩 하여 표현하고 있다.
+
+커피URI는 아래와 같은 구조를 가지며, URI에는 커피머신의 접속주소 및 커피포트 번호, 부가옵션 등이 포함될 수 있다.
+
+```
+coffee-url  =  coffee-scheme ":" [ "//" 접속주소 ] ["/" 커피포트선택자 ] ["?" 부가정보목록 ]
+
+coffee-scheme = ( "koffie"                      ; Afrikaans, Dutch
+              | "q%C3%A6hv%C3%A6"          ; Azerbaijani
+              | "%D9%82%D9%87%D9%88%D8%A9" ; Arabic
+           | "akeita"                   ; Basque
+           | "koffee"                   ; Bengali
+           | "kahva"                    ; Bosnian
+           | "kafe"                     ; Bulgarian, Czech
+           | "caf%C3%E8"                ; Catalan, French, Galician
+              | "%E5%92%96%E5%95%A1"       ; Chinese
+              | "kava"                     ; Croatian
+           | "k%C3%A1va                 ; Czech
+   ㄴ        | "kaffe"                    ; Danish, Norwegian, Swedish
+           | "coffee"                   ; English
+           | "kafo"                     ; Esperanto
+              | "kohv"                     ; Estonian
+           | "kahvi"                    ; Finnish
+           | "%4Baffee"                 ; German
+           | "%CE%BA%CE%B1%CF%86%CE%AD" ; Greek
+           | "%E0%A4%95%E0%A5%8C%E0%A4%AB%E0%A5%80" ; Hindi
+           | "%E3%82%B3%E3%83%BC%E3%83%92%E3%83%BC" ; Japanese
+           | "%EC%BB%A4%ED%94%BC"       ; Korean
+           | "%D0%BA%D0%BE%D1%84%D0%B5" ; Russian
+           | "%E0%B8%81%E0%B8%B2%E0%B9%81%E0%B8%9F" ; Thai
+           )
+
+커피포트선택자 = "pot-" 정수  ; 하나의 커피머신 안에 여러개의 커피포트가 존재할 수 있기 때문.
+부가정보목록 = #( 부가정보 )
+```
+
+### 미디어타입
+커피포트의 요청 메세지 중 ```POST```와 ```BREW```는 헤더의 Content-Type에 ```Content-Type = 'message/coffeepot'```과 같이 message/coffeepot 라는 미디어타입을 포함해야 한다.
+이 미디어 타입은 요청하는 메소드에 담겨있는 정보의 종류가 커피포트를 제어하기 위한 정보임을 의미한다.
+
+이 message/coffeepot은 커피포트를 제어하기 위한 coffee-message-body라는 헤더만을 가질 수 있으며, 다음과 같이 시작/종료를 알리는 값 만을 허용한다.
+
+```
+coffee-message-body = "start" | "stop"
+```
+
+### 운영상 제약사항
+HTCPCP에는 다음과 같이 커피포트가 유비쿼터스 환경에서 개발되었을 경우 또한 고려하고 있다.
+
+* **타이밍 이슈**
+   커피포트를 이용하는 사람과 커피포트 서비스 사이에는 긴밀한 연결이 필요하다.이를 위해 커피포트는 반드시 [NTP(Network Time Protocol)](https://en.wikipedia.org/wiki/Network_Time_Protocol) 를 이용한 글로벌 시간동기화 기능을 지원해야 한다.
+   기기를 원격으로 제어하는 일이 쉽지 않은 일임에도 불구하고 케임브리지 대학에서는 [The Trojan Room Coffee Machine](http://www.cl.cam.ac.uk/coffee/coffee.html)이라는 커피포트 서비스를 선보였으며, 이는 [SNMP](https://en.wikipedia.org/wiki/Simple_Network_Management_Protocol)가 아닌 웹을 이용한 방식으로 커피포트를 감시하고(monitoring) 제어(management) 할 수 있는 시스템의 구현 사례라 할 수 있다.
+   웹 페이지는 일반적으로 정적(static)이므로 매번 요청 할 필요 없이, 한번 요청한 내용을 웹브라우저에 저장하여 보여주는 방식으로 구현 할 수 있다. 다만 기기의 상태나 제어와 같은 동작은 실시간으로 변하는(dynamic) 값이므로 서버에 접속 할 때마다 그 값을 갱신 해 줄 필요가 있다.
+
+* **방화벽 통과**
+
+
+## HTCPCP의 구성에 대한 고찰
+- 상태코드 406
+   406오류코드의를 정의하는 마지막 문장에는 '실제로는, 대부분의 자동커피머신은 이러한 추가작업을 수행 할 수 없다.' 라고 표현되어 있다.
+   이는 HTCPCP 1.0이 작성된 1998년 기준으로 자동 커피머신에서는 우유나 설탕을 사용자의 선택에때라 제공할 수 있는 기기가 없었던 것을 생각 할 수 있다.
+   이 글을 쓰고있는 2016년 현재에는 이 기능을 제공하는 커피머신이 존재하고 있으며, 이는 표준이 제정 될 당시 향후 추가될 기능 중 현재 미구현 항목에 대한 오류코드를 제시한 것으로 보인다.
