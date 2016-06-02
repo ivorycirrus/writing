@@ -2,14 +2,14 @@
 
 ![https://d69dr897pi70n.cloudfront.net/images/blogs/3_main.jpg](https://d69dr897pi70n.cloudfront.net/images/blogs/3_main.jpg)
 
-## HTTP 상태 코드
+## 1. HTTP 상태 코드
 이제 인터넷은 우리 생활에 녹아들어 시간과 장소에 구애 받지 않고 사람과 사람, 사람과 정보를 연결 해 주고 있다.
 
 이런 인터넷 상의 정보에 접근하는 것은 마치 우리가 누군가와 전화통화를 하는 과정과 이슷하게 생각 할 수 있다. 먼저 우리가 누군가와 전화 통화를 하려면, 받는 사람의 전화번호를 알아야 한다. 마찬가지로 인터넷의 정보에 접근하기 위해서는 이 정보가 위치하고 있는 곳의 주소(URL)이 필요하다. 자, 이제 수화기를 들고 전화번호를 누른다. 전화를 받는 사람의 번호를 올바르게 입력했다면 머지않아 벨 소리가 들릴 것이고, 상대방이 전화를 받았을 때 딸깍 하는 소리와 함께 통화가 시작된다. 이렇게 전화를 발신하고, 상대방이 받을 때까지 수신대기하고, 상대방이 받은 경우 실데 통화상태로 변경하여 목소리를 전달하기 시작하는 과정으로 전화 를 거는 행위를 정리 할 수 있다.
 
 인터넷에서 정보를 가져오는 과정 또한 이와 비슷하게, 요청한 URL에 정보가 존재하는지 확인하고, 연결이 되엇다면 데이터를 전송받고, 전송이 성공 한 경우 전송성공 메세지와 함께 사용자에게 전송받은 정보를 보여주기 시작한다. 우리가 전화를 걸 때에도 '벨소리가 들리면 통화 대기중' 이라고 암묵적으로 약속이 되어 있을 것이다. 마찬가지로 인터넷을 이용하여 정보를 전달 할 때에도 정보의 전송방법 및 전송상태에 대한 약속들이 필요 할 것이다.
 
-## I'm teapot
+## 2. I'm teapot
 
 앞서 이야기 한 바와 같이 원격지에 있는 누군가와 통신을 할 때에는 통신 상태에 대한 정의가 필요한데, 이를 IETF에서는 [RFCs(Request for Comment)의 상태코드](http://www.iana.org/assignments/http-status-codes/)로 표준을 정의 해 놓았다. 그런데 [HTTP 상태 코드](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) 목록을 한번이라도 자세히 읽어 본 적이 있다면, 조금 특이한 의미 오류 코드를 발견 할 수 있다.
 
@@ -33,7 +33,7 @@ IETF, 국제 인터넷 표준화 기구는 인터넷의 운영, 관리, 개발�
 >
 >Almost every April Fools' Day (1 April) since 1989, the Internet RFC Editor has published one or more humorous Request for Comments (RFC) documents, following in the path blazed by the June 1973 RFC 527 called ARPAWOCKY, a parody of Lewis Carroll's nonsense poem "Jabberwocky". [The following list](https://en.wikipedia.org/wiki/April_Fools%27_Day_Request_for_Comments) also includes humorous RFCs published on other dates.
 
-## HTCPCP의 구성
+## 3. HTCPCP의 구성
 찻주전자로 커피를 끓이기 위한 통신규약인 HTCPCP는 IETF [RFC 2324](https://tools.ietf.org/html/rfc2324)에 정의되어 있으며, HTTP 통신을 기반으로 Method / Header / URI-scheme 등이 추가로 구성되어 있다.
 
 HTCPCP의 표준문서의 각 항목이 어떨게 구성되었는지 자세히 살펴보자. HTCPCP 표준 문서는 양이 많지 않은 편이므로, 아래에서는 각 정의 항목을 하나하나 살펴 보고자 한다.
@@ -173,7 +173,26 @@ HTCPCP에는 다음과 같이 커피포트가 유비쿼터스 환경에서 개�
 인터넷을 통한 커피포트 제어시, 사용자와 커피포트 서비스 사이에 중간자가 개입 할 가능성이 있다. 이 때 중간자는 'denial of coffee service'등의 다양한 방법으로 커피포트 서비스에 대해 공격할 수 있다. 이를 차단하기 위해서 기기 필터링을 사용 할 수 있지만, 이는 바이러스를 차단하는 좋은 해결책은 되지 못할 것이다.
 커피포트 서비스에 접속 할 때의 인증문제는 HPCPCP가 아닌 별도의 메모에서 다룰 것이라 정의되어 있다.
 
-## HTCPCP의 구성에 대한 고찰
+## 이것이 전부가 아니다.
+IETF의 위트가득한 이 농담은 보는 이로 하여금 동참하고 싶은 마음이 들게 하기에 충분했다. 이 절에서는 HTCPCP로 시작된 커피포트 서비스에 대한 흥미로운 사실들을 소개 할 것이다.
+
+### IETF의 장난은 어디까지?
+HTCPCP는 1998년 4월 1일 발표된 RFC문서이다. IETF는 이 표준문서 하나에 만족하지 않고, 같은날 커피포트 등의 하드웨어를 관리하는 방법에 대한 표준을 함께 제안했다.
+게다가 HTCPCP가 발표되고 16년이 지난 2014년 4월 1일, 잊혀질만도 했을 때 쯤 커피포트 제어 프로토콜의 확장에 대한 표준을 추가하기에 이른다. 각각에 대한 내용을 간략히 보면 다음과 같다.
+
+* **드립형태의 음료를 가열하는 기기에 대한 제어 방법**
+    * 표준문서 : [(RFC2325)Definitions of Managed Objects for Drip-Type Heated Beverage Hardware Devices using SMIv2](https://tools.ietf.org/html/rfc2325)
+    * 요약 : 인터넷 프로토콜을 통한 정보기반제어(MIB, Management Information Base)에 대한 정의를 기술하고있다. 특별히 커피를 끓이는 기기에 대한정의와 관리에 대한 내용을 포함한다.
+
+* **차(tea)를 내리기 위한 커피포트 제어 프로토콜의 확장**
+    * 표준문서 : [(RFC7168)The Hyper Text Coffee Pot Control Protocol for Tea Efflux Appliances (HTCPCP-TEA)](https://tools.ietf.org/html/rfc7168)
+    * 요약 : HTCPCP는 차의 종류나 차의 특성등의 속성들에 대한 고려가 되어 있지 않아서 차를 내리는 기기의 제어프로토콜로 사용하기 힘들다. HTCPCP-TEA는 차를 우려내는데 필요한 속성들을 추가로 정의하여 네트워크에 연결될 차 내리는 기기를 제어 할 수 있는 규약을 기술하고 있다.
+
+### 재미있는건 함께 하자 by Google
+네트워크에 연결된 커피포트와 이의 제어 라는 재미있는 주제는 IETF만 관심을 가졌을 리는 없다. 역시 이 주제에 관심을 가진 엔지니어가 있어서 
+http://www.google.com/teapot
+
+## 5. HTCPCP의 구성에 대한 고찰
 - 상태코드 406
    406오류코드의를 정의하는 마지막 문장에는 '실제로는, 대부분의 자동커피머신은 이러한 추가작업을 수행 할 수 없다.' 라고 표현되어 있다.
    이는 HTCPCP 1.0이 작성된 1998년 기준으로 자동 커피머신에서는 우유나 설탕을 사용자의 선택에때라 제공할 수 있는 기기가 없었던 것을 생각 할 수 있다.
