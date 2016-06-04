@@ -188,12 +188,44 @@ HTCPCP는 1998년 4월 1일 발표된 RFC문서이다. IETF는 이 표준문서 
     * 표준문서 : [(RFC7168)The Hyper Text Coffee Pot Control Protocol for Tea Efflux Appliances (HTCPCP-TEA)](https://tools.ietf.org/html/rfc7168)
     * 요약 : HTCPCP는 차의 종류나 차의 특성등의 속성들에 대한 고려가 되어 있지 않아서 차를 내리는 기기의 제어프로토콜로 사용하기 힘들다. HTCPCP-TEA는 차를 우려내는데 필요한 속성들을 추가로 정의하여 네트워크에 연결될 차 내리는 기기를 제어 할 수 있는 규약을 기술하고 있다.
 
-### 재미있는건 함께 하자 by Google
-네트워크에 연결된 커피포트와 이의 제어 라는 재미있는 주제는 IETF만 관심을 가졌을 리는 없다. 역시 이 주제에 관심을 가진 엔지니어가 있어서 
-http://www.google.com/teapot
+### Google의 이스터에그
+네트워크에 연결된 커피포트와 이의 제어 라는 재미있는 주제는 IETF만 관심을 가졌을 리는 없다. 역시 이 주제에 관심을 가진 엔지니어가 있어서 [**418.** I'm a teapot : http://www.google.com/teapot](http://www.google.com/teapot)라는 페이지를 [다른 구글 이스터에그](http://searchengineland.com/library/google/google-easter-eggs)페이지와 함께 제공하고 있다.
+
+![teapot_google](google-teapot-418.png)
+
+그 외에도 
+https://www.youtube.com/watch?v=R8B-mAHWodk
+
+위 그림과 같이 찻수전자와 찻잔이 표시되며, 찻주전자를 마우스로 클릭 하면 찻잔에 커피를 따르는 애니메이션을 보여준다. 심지어 자이로 센서 등이 들어 있는 스마트폰 등으로 이 페이지를 열어 볼 경우, 스마트폰의 기울기를 감지하여 화면을 옆으로 기울이면 차를 따르는 애니메이션을 보여주는 세심함까지 가미되어 있다.
+
+### 실제 HTCPCP서비스의 구현 사례
+실제로 HTCPCP를 구현해 본 사례가 존재한다. 아래는 [http://www.error418.org](http://www.error418.org/2014/01/fun-with-logs-geeks.html)에서 Raspberry PI를 이용한 HTCPCP를 구현한 예 이다. BREW메소드를 꼼꼼하게 구현했으며, cream 파라메터도 수신하는 것을 볼 수 있다.
+
+![418teapot_rasppi](418teapot_rasppi.jpg)
+
+또 다른 사례로 htcpcpd라는 데몬 서비스를 구현해서 HTCPCP 서비스를 개발하고 시스템구성 및 동작 동영상을 공개한 사례도 있다. 이는 Github에 ardunio소스코드와 Phython으로 작성된 htcpcpd 서버 소스코드를 공개하고 있으니 HTCPCP서비스를 개발해 보고자 한다면 참고가 될 수 있을 것이다.
+
+![demo_htcpcp](demo_htcpcp.png)
+
+Youtube 동영상 : https://www.youtube.com/watch?v=R8B-mAHWodk
+소스코드 : https://github.com/gelendir/htcpcpd
+
+### 그 외 구현사례들
+이 이외에도 HPCPCP에 대한 다양한 언어로된 구현 사례는 다음과 같다.
+
+* C implenemtation : https://github.com/madmaze/HTCPCP
+* C Implementation (VS2015 project) : https://github.com/mechacrash/HTCPCP
+* Phython/Django implementation : https://gist.github.com/kylef/144747
+* Javasctipt/Node.js implementation : https://www.npmjs.com/package/htcpcp
 
 ## 5. HTCPCP의 구성에 대한 고찰
 - 상태코드 406
    406오류코드의를 정의하는 마지막 문장에는 '실제로는, 대부분의 자동커피머신은 이러한 추가작업을 수행 할 수 없다.' 라고 표현되어 있다.
    이는 HTCPCP 1.0이 작성된 1998년 기준으로 자동 커피머신에서는 우유나 설탕을 사용자의 선택에때라 제공할 수 있는 기기가 없었던 것을 생각 할 수 있다.
    이 글을 쓰고있는 2016년 현재에는 이 기능을 제공하는 커피머신이 존재하고 있으며, 이는 표준이 제정 될 당시 향후 추가될 기능 중 현재 미구현 항목에 대한 오류코드를 제시한 것으로 보인다.
+
+
+## Refrences
+* https://www.exceptionnotfound.net/http-418-im-a-teapot-just-a-joke-or-something-more/
+* http://meta.stackexchange.com/questions/185426/stack-overflow-returning-http-error-code-418-im-a-teapot
+* http://joereddington.com/projects/418-error-code-teapot/
