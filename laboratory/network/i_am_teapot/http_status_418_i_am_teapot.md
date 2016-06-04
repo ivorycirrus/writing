@@ -205,10 +205,10 @@ https://www.youtube.com/watch?v=R8B-mAHWodk
 
 또 다른 사례로 htcpcpd라는 데몬 서비스를 구현해서 HTCPCP 서비스를 개발하고 시스템구성 및 동작 동영상을 공개한 사례도 있다. 이는 Github에 ardunio소스코드와 Phython으로 작성된 htcpcpd 서버 소스코드를 공개하고 있으니 HTCPCP서비스를 개발해 보고자 한다면 참고가 될 수 있을 것이다.
 
-![demo_htcpcp](demo_htcpcp.png)
+[![demo_htcpcp](demo_htcpcp.png)](https://www.youtube.com/watch?v=R8B-mAHWodk)
 
-Youtube 동영상 : https://www.youtube.com/watch?v=R8B-mAHWodk
-소스코드 : https://github.com/gelendir/htcpcpd
+* Youtube 동영상 : https://www.youtube.com/watch?v=R8B-mAHWodk
+* 소스코드 : https://github.com/gelendir/htcpcpd
 
 ### 그 외 구현사례들
 이 이외에도 HPCPCP에 대한 다양한 언어로된 구현 사례는 다음과 같다.
