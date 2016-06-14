@@ -2,7 +2,8 @@
 
 # HTTP status code 418 : I'm a teapot
 웹 브라우저로 인터넷을 이용해 본 경험이 있는 사람이라면, 대부분은 아래와 비슷한 페이지를 본 경험이 있을 것이다.<br/><br/>
-이 화면은 Google 웹 사이트에서 제공하지 않는 URL로 접속했을 때의 페이지로 '404, That's an error.' 이라는 오류 메세지를 표시하는 것을 볼 수 있다.
+이 화면은 Google 웹 사이트에서 제공하지 않는 URL로 접속했을 때의 페이지로 '404, That's an error.' 이라는 오류 메세지를 표시하는 것을 볼 수 있다. 이 때, 404라는 숫자는 'Page Not Found'를 뜻하는 HTTP상태코드를 나타낸다. HTTP로 통신을 하는 과정에서 다양한 통신상태에 대한 구분이 필요 했고, 이를 잘 분류된 3자리 숫자료 표현 한 것이 HTTP상태코드이다.<br/><br/>
+이 상태코드 목록에는 HTTP통신의 연결 성공에서부터 서버의 서비스 오류까지 다양한 통신상태가 정리되어 있는데, 그 가운데 'I'm teapot'라는 설명이 적혀있는 통신상태 및 오류코드와는 다소 거리가 멀어보이는 418번 오류코드를 찾을 수 있다. 이 글에서는 HTTP상태코드 418번의 유래와 서비스 표준에 대해 알아보고, IoT서비스 설계 및 구성과 관련하여 해당 표준의 제안이 어떻게 해석 될 수 있는지에 대해서 논의 해 볼 것이다.
 
 ![http404](http404.png)
 
@@ -22,7 +23,7 @@
 >**[418 I'm a teapot (RFC 2324)](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_Client_Error)**
 > This code was defined in 1998 as one of the traditional IETF April Fools' jokes, in RFC 2324, Hyper Text Coffee Pot Control Protocol, and is not expected to be implemented by actual HTTP servers. The RFC specifies this code should be returned by tea pots requested to brew coffee. This HTTP status is used as an easter egg in some websites, including Google.com.
 
-1998년 국제 인터넷 표준화 기구(IETF, Internet Engineering Task Force)의 만우절 농잠으로 시작됫으며 실제로 [RFC 2324](https://tools.ietf.org/html/rfc2324)에  하이퍼텍스트 커피포트 제어규약(HTCPCP, Hyper Text Coffee Pot Control Protocol)으로 정의됫다고 한다. 이 규약은 실제로 HTTP를 이용하여 커피를 끓이는 찻주전자의 상태를 서비스하는 서버의 구현을 염두 해 주고 정의되었다. 물론 [HTTP 1.1 표준문서](https://tools.ietf.org/html/rfc7231)에는 정식으로 포함되지 않았으나, IETF의 표준규약에는 아래와 같이 실제 HTCPCP의 RFC 문서가 존재하고 있다.
+1998년 국제 인터넷 표준화 기구(IETF, Internet Engineering Task Force)의 만우절 농잠으로 시작됫으며 실제로 [RFC 2324](https://tools.ietf.org/html/rfc2324)에  하이퍼텍스트 커피포트 제어규약(HTCPCP, Hyper Text Coffee Pot Control Protocol)으로 정의됫다고 한다. 이 규약은 실제로 HTTP를 이용하여 커피포트의 상태를 서비스하는 서버의 구현을 염두 해 주고 정의되었다. 물론 [HTTP 1.1 표준문서](https://tools.ietf.org/html/rfc7231)에는 정식으로 포함되지 않았으나, IETF의 표준규약에는 아래와 같이 실제 HTCPCP의 RFC 문서가 존재하고 있다.
 
 ![rfc2324_htcpcp](rfc2324_htcpc.png)
 
@@ -36,7 +37,7 @@ IETF, 국제 인터넷 표준화 기구는 인터넷의 운영, 관리, 개발�
 >Almost every April Fools' Day (1 April) since 1989, the Internet RFC Editor has published one or more humorous Request for Comments (RFC) documents, following in the path blazed by the June 1973 RFC 527 called ARPAWOCKY, a parody of Lewis Carroll's nonsense poem "Jabberwocky". [The following list](https://en.wikipedia.org/wiki/April_Fools%27_Day_Request_for_Comments) also includes humorous RFCs published on other dates.
 
 ## 3. HTCPCP의 구성
-찻주전자로 커피를 끓이기 위한 통신규약인 HTCPCP는 IETF [RFC 2324](https://tools.ietf.org/html/rfc2324)에 정의되어 있으며, HTTP 통신을 기반으로 Method / Header / URI-scheme 등이 추가로 구성되어 있다.
+커피를 끓이기 위한 통신규약인 HTCPCP는 IETF [RFC 2324](https://tools.ietf.org/html/rfc2324)에 정의되어 있으며, HTTP 통신을 기반으로 Method / Header / URI-scheme 등이 추가로 구성되어 있다.
 
 HTCPCP의 표준문서의 각 항목이 어떨게 구성되었는지 자세히 살펴보자. HTCPCP 표준 문서는 양이 많지 않은 편이므로, 아래에서는 각 정의 항목을 하나하나 살펴 보고자 한다.
 
@@ -102,7 +103,7 @@ alcohol-type    = ( "Whisky" | "Rum" | "Kahlua" | "Aquavit" )
    HTCPCP에서는 Accept-Additions 헤더를 통한 요청을 처리 할 수 없을 경우에 발생하는 오류코드이다.
 
 - 418 I'm a teapot
-   서비스를 제공하는 서버가 커피포트입을 알리는 오류코드. 응답 바디에 [short and stout](https://en.wikipedia.org/wiki/I%27m_a_Little_Teapot)라는 커피포트 노래를 포함 할 수 있다.
+   찻주전자(teapot)로 커피를 끓이려 할때 '나는 차를 우려내는 찻주전자입니다' 라고 커피를 끓일 수 없음을 회신하는 오류코드. 응답 바디에 [short and stout](https://en.wikipedia.org/wiki/I%27m_a_Little_Teapot)라는 커피포트 노래를 포함 할 수 있다.
 
 ### URI Scheme
 커피는 세게적인 음료이기 때문에 커피에 대한 URI-scheme 또한 다국어를 지원하고 있다.
@@ -195,7 +196,7 @@ HTCPCP는 1998년 4월 1일 발표된 RFC문서이다. IETF는 이 표준문서 
 
 ![teapot_google](google-teapot-418.png)
 
-위 그림과 같이 찻수전자와 찻잔이 표시되며, 찻주전자를 마우스로 클릭 하면 찻잔에 커피를 따르는 애니메이션을 보여준다. 심지어 자이로 센서 등이 들어 있는 스마트폰 등으로 이 페이지를 열어 볼 경우, 스마트폰의 기울기를 감지하여 화면을 옆으로 기울이면 차를 따르는 애니메이션을 보여주는 세심함까지 가미되어 있다.
+위 그림과 같이 찻주전자와 찻잔이 표시되며, 찻주전자를 마우스로 클릭 하면 찻잔에 커피를 따르는 애니메이션을 보여준다. 심지어 자이로 센서 등이 들어 있는 스마트폰 등으로 이 페이지를 열어 볼 경우, 스마트폰의 기울기를 감지하여 화면을 옆으로 기울이면 차를 따르는 애니메이션을 보여주는 세심함까지 가미되어 있다.
 
 ### 실제 HTCPCP서비스의 구현 사례
 실제로 HTCPCP를 구현해 본 사례가 존재한다. 아래는 [http://www.error418.org](http://www.error418.org/2014/01/fun-with-logs-geeks.html)에서 Raspberry PI를 이용한 HTCPCP를 구현한 예 이다. BREW메소드를 꼼꼼하게 구현했으며, cream 파라메터도 수신하는 것을 볼 수 있다.
