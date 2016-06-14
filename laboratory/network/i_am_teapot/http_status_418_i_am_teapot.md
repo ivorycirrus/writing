@@ -18,7 +18,7 @@
 
 앞서 이야기 한 바와 같이 원격지에 있는 누군가와 통신을 할 때에는 통신 상태에 대한 정의가 필요한데, 이를 IETF에서는 [RFCs(Request for Comment)의 상태코드](http://www.iana.org/assignments/http-status-codes/)로 표준을 정의 해 놓았다. 그런데 [HTTP 상태 코드](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) 목록을 한번이라도 자세히 읽어 본 적이 있다면, 조금 특이한 의미 오류 코드를 발견 할 수 있다.
 
-### HTTP 상태 코드 418
+### 2.1 HTTP 상태 코드 418
 
 >**[418 I'm a teapot (RFC 2324)](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_Client_Error)**
 > This code was defined in 1998 as one of the traditional IETF April Fools' jokes, in RFC 2324, Hyper Text Coffee Pot Control Protocol, and is not expected to be implemented by actual HTTP servers. The RFC specifies this code should be returned by tea pots requested to brew coffee. This HTTP status is used as an easter egg in some websites, including Google.com.
@@ -27,7 +27,7 @@
 
 ![rfc2324_htcpcp](rfc2324_htcpc.png)
 
-### IETF가 표준문서에 농담을?
+### 2.2 IETF가 표준문서에 농담을?
 IETF, 국제 인터넷 표준화 기구는 인터넷의 운영, 관리, 개발에 대해 협의하고 프로토콜과 구조적인 사안들을 분석하는 인터넷 표준화 작업을 하는 국제기구이다. 이렇게 중요한 역할을 담당하는 국제기구가 국제표준으로 장난섞인 농담을 한다는 것은 쉽사리 상상이 되지 않는다.
 
 그렇다. 실제로 IETF가 RFC를 가지고 농담을 하고 있으며, 이는 오늘 내일의 문제가 아니다. 게다가 커피포트 제어 프로토콜 뿐만이 아닌 꽤 많은 수의 만우절 장난으로 발표한 문서가 있음을 알수 있다. 심지어 이에 대해서 위키피디아에는 [만우절 RFC](https://en.wikipedia.org/wiki/April_Fools%27_Day_Request_for_Comments)라는 항목이 실제로 존재하고 있다.
@@ -41,7 +41,7 @@ IETF, 국제 인터넷 표준화 기구는 인터넷의 운영, 관리, 개발�
 
 HTCPCP의 표준문서의 각 항목이 어떨게 구성되었는지 자세히 살펴보자. HTCPCP 표준 문서는 양이 많지 않은 편이므로, 아래에서는 각 정의 항목을 하나하나 살펴 보고자 한다.
 
-### Method
+### 3.1 Method
 
 - **```BREW``` 또는 ```POST``` 메소드**
    - 커피를 끓이기 위한 메소드 이며, Content-Type으로 ```application/coffee-pot-command```을 가진다.
@@ -62,7 +62,7 @@ HTCPCP의 표준문서의 각 항목이 어떨게 구성되었는지 자세히 �
    - 커피를 따른 다음 우유를 추가로 따를 경우, 언제(when) 우유를 따르는 것을 멈출것인지에 대한 명령이다.
    - 커피에 우유가 충분히 따라 진 경우 WHEN메소드를 호출하여 우유 따르는 동작을 중지 할 수 있다.
 
-### Header
+### 3.2 Header
 
 - 'safe' 응답 헤더 (recommended)
    실제로 커피를 끓여내는 과정에는 다양한 위험 요소가 존재한다. 커피포트 서버에서는 이러한 위험요소들을 식별해서 사용자에게 위험요소를 알릴 수 있다.
@@ -96,7 +96,7 @@ syrup-type      = ( "Vanilla" | "Almond" | "Raspberry"
 alcohol-type    = ( "Whisky" | "Rum" | "Kahlua" | "Aquavit" )
 ```
 
-### Status Code
+### 3.3 Status Code
 
 - 406 Not Acceptable
    406 Not Acceptable 헤더는 일반적으로 '요청한 헤더에 정의된 컨텐츠의 특성이 실제 리소스에 적용될 수 없거나 처리될 수 없음'을 의미한다.
@@ -105,7 +105,7 @@ alcohol-type    = ( "Whisky" | "Rum" | "Kahlua" | "Aquavit" )
 - 418 I'm a teapot
    찻주전자(teapot)로 커피를 끓이려 할때 '나는 차를 우려내는 찻주전자입니다' 라고 커피를 끓일 수 없음을 회신하는 오류코드. 응답 바디에 [short and stout](https://en.wikipedia.org/wiki/I%27m_a_Little_Teapot)라는 커피포트 노래를 포함 할 수 있다.
 
-### URI Scheme
+### 3.4 URI Scheme
 커피는 세게적인 음료이기 때문에 커피에 대한 URI-scheme 또한 다국어를 지원하고 있다.
 
 URI가 어떤 언어로 표현되든지 모두 동일한 의미를 지닌다. URI가 ANSI문자로 표현 할 수 없는 경우 인코딩 된 문자로 표현한다. URI에 사용된 문자는 대소문자를 구분하지 않는데 독일어 'Kaffee'라는 단어는 K가 대문자로 표현되는 것이 중요하기에 특별히 인코딩 하여 표현하고 있다.
@@ -144,7 +144,7 @@ coffee-scheme = ( "koffie"                      ; Afrikaans, Dutch
 부가정보목록 = #( 부가정보 )
 ```
 
-### 미디어타입
+### 3.5 미디어타입
 커피포트의 요청 메세지 중 ```POST```와 ```BREW```는 헤더의 Content-Type에 ```Content-Type = 'message/coffeepot'```과 같이 message/coffeepot 라는 미디어타입을 포함해야 한다.
 이 미디어 타입은 요청하는 메소드에 담겨있는 정보의 종류가 커피포트를 제어하기 위한 정보임을 의미한다.
 
@@ -154,7 +154,7 @@ coffee-scheme = ( "koffie"                      ; Afrikaans, Dutch
 coffee-message-body = "start" | "stop"
 ```
 
-### 운영상 제약사항
+### 3.6 운영상 제약사항
 HTCPCP에는 다음과 같이 커피포트가 유비쿼터스 환경에서 개발되었을 경우 또한 고려하고 있다.
 
 * **타이밍 이슈**
@@ -166,20 +166,20 @@ HTCPCP에는 다음과 같이 커피포트가 유비쿼터스 환경에서 개�
    대부분의 HTTP트래픽이 방화벽을 넘는 일은 그다지 어려운 일이 아니다. HTCPCP를 이용하는 커피포트는 반드시 불(fire)을 사용하지 않지만, 커피를 끓이기 위해서는 불이 아니더라도 모종의 열원이 필요할 것이고 이로인한 위험요소를 차단하는데에는 방화벽(firewall)이 유용할 것이다.
    HPCPCP의 방화벽을 이용하는 방법은 크게 어렵지 않은데, 이는 HPCPCP를 이용하는 커피포트가 홈 네트워크 방화벽의 바깥에 존재하는 시스템이며 기존의 HTTP와 같은 포트로 통신을 하기 때문에 기존 방화벽 정책을 재사용 할 수 있다. 물론 HTCPCP에 특화된 몇몇 메소드나 헤더 등을 처리하기위해 방화벽 정책을 업그레이드 할 필요가 있을 수 있지만, 홈 네트워크를 관리하는 사람도 커피를 마시는 사람일 것이기 때문에 커피포트를 위한 방화벽 정책 튜닝에 지원을 아끼지 않을 것이다.
 
-### 시스템 관리를 위한 고려사항
+### 3.7 시스템 관리를 위한 고려사항
 웹을 이용한 커피포트 관리 시스템은 오래전부터 존재해 왔다. 케임브리지 대학의 CAM과 같은 오래된 시스템의 경우 ATM에서 사용하는 방식인 비디오 카메라의 화살을 프레임 그래버(frame-grabber)로 캡쳐해서 웹 상에 이 미지로 서비스 하는 방식으로 구성하고 있었다.
 케임브리지 대학 연구실의 Trojan Room 예를 좀더 자세히 보면, Trojan Room 복도에 있는 커피포트를 웹일 이용해서 모니터링 하고 관리하는 서비스를 제공했다. 이 서비스는 케임브리지 대학 컴퓨터 연구소에서 개발한 새로운 RPC 동작방식인 MSRPC2를 사용했는데, 이 방식은 ATM을 위한 네트워크 계층 프로토콜인 MSNL(Multi-Service Network Layer) 에서 동작하는 방식이다.
 
 로컬 네트워크를 넘어 인터넷 환경에서의 커피포트를 관리하고자 할 때에는 커피포트MIB를 이용 할 수 있다. 이 관리 방법은 [Definitions of Managed Objects for Drip-Type Heated Beverage Hardware Devices using SMIv2](https://tools.ietf.org/html/rfc2325)라는 이름으로 HTCPCP와 같은 날자인 1998년 4월 1일에 별도의 문서로 RFC가 등록되어 있다.
 
-### 보안에 대한 고려사항
+### 3.8 보안에 대한 고려사항
 인터넷을 통한 커피포트 제어시, 사용자와 커피포트 서비스 사이에 중간자가 개입 할 가능성이 있다. 이 때 중간자는 'denial of coffee service'등의 다양한 방법으로 커피포트 서비스에 대해 공격할 수 있다. 이를 차단하기 위해서 기기 필터링을 사용 할 수 있지만, 이는 바이러스를 차단하는 좋은 해결책은 되지 못할 것이다.
 커피포트 서비스에 접속 할 때의 인증문제는 HPCPCP가 아닌 별도의 메모에서 다룰 것이라 정의되어 있다.
 
-## 이것이 전부가 아니다.
+## 4. 이것이 전부가 아니다.
 IETF의 위트가득한 이 농담은 보는 이로 하여금 동참하고 싶은 마음이 들게 하기에 충분했다. 이 절에서는 HTCPCP로 시작된 커피포트 서비스에 대한 흥미로운 사실들을 소개 할 것이다.
 
-### IETF의 장난은 어디까지?
+### 4.1 IETF의 장난은 어디까지?
 HTCPCP는 1998년 4월 1일 발표된 RFC문서이다. IETF는 이 표준문서 하나에 만족하지 않고, 같은날 커피포트 등의 하드웨어를 관리하는 방법에 대한 표준을 함께 제안했다.
 게다가 HTCPCP가 발표되고 16년이 지난 2014년 4월 1일, 잊혀질만도 했을 때 쯤 커피포트 제어 프로토콜의 확장에 대한 표준을 추가하기에 이른다. 각각에 대한 내용을 간략히 보면 다음과 같다.
 
@@ -191,7 +191,7 @@ HTCPCP는 1998년 4월 1일 발표된 RFC문서이다. IETF는 이 표준문서 
     * 표준문서 : [(RFC7168)The Hyper Text Coffee Pot Control Protocol for Tea Efflux Appliances (HTCPCP-TEA)](https://tools.ietf.org/html/rfc7168)
     * 요약 : HTCPCP는 차의 종류나 차의 특성등의 속성들에 대한 고려가 되어 있지 않아서 차를 내리는 기기의 제어프로토콜로 사용하기 힘들다. HTCPCP-TEA는 차를 우려내는데 필요한 속성들을 추가로 정의하여 네트워크에 연결될 차 내리는 기기를 제어 할 수 있는 규약을 기술하고 있다.
 
-### Google의 이스터에그
+### 4.2 Google의 이스터에그
 네트워크에 연결된 커피포트와 이의 제어 라는 재미있는 주제는 IETF만 관심을 가졌을 리는 없다. 역시 이 주제에 관심을 가진 엔지니어가 있어서 [**418.** I'm a teapot : http://www.google.com/teapot](http://www.google.com/teapot)라는 페이지를 [다른 구글 이스터에그](http://searchengineland.com/library/google/google-easter-eggs)페이지와 함께 제공하고 있다.
 
 ![teapot_google](google-teapot-418.png)
@@ -210,7 +210,7 @@ HTCPCP는 1998년 4월 1일 발표된 RFC문서이다. IETF는 이 표준문서 
 * Youtube 동영상 : https://www.youtube.com/watch?v=R8B-mAHWodk
 * 소스코드 : https://github.com/gelendir/htcpcpd
 
-### 그 외 구현사례들
+### 4.3 그 외 구현사례들
 이 이외에도 HPCPCP에 대한 다양한 언어로된 구현 사례는 다음과 같다.
 
 * C implenemtation : https://github.com/madmaze/HTCPCP
