@@ -3,7 +3,7 @@
 # HTTP status code 418 : I'm a teapot
 웹 브라우저로 인터넷을 이용해 본 경험이 있는 사람이라면, 대부분은 아래와 비슷한 페이지를 본 경험이 있을 것이다.<br/><br/>
 이 화면은 Google 웹 사이트에서 제공하지 않는 URL로 접속했을 때의 페이지로 '404, That's an error.' 이라는 오류 메세지를 표시하는 것을 볼 수 있다. 이 때, 404라는 숫자는 'Page Not Found'를 뜻하는 HTTP상태코드를 나타낸다. HTTP로 통신을 하는 과정에서 다양한 통신상태에 대한 구분이 필요 했고, 이를 잘 분류된 3자리 숫자료 표현 한 것이 HTTP상태코드이다.<br/><br/>
-이 상태코드 목록에는 HTTP통신의 연결 성공에서부터 서버의 서비스 오류까지 다양한 통신상태가 정리되어 있는데, 그 가운데 'I'm teapot'라는 설명이 적혀있는 통신상태 및 오류코드와는 다소 거리가 멀어보이는 418번 오류코드를 찾을 수 있다. 이 글에서는 HTTP상태코드 418번의 유래와 서비스 표준에 대해 알아보고, IoT서비스 설계 및 구성과 관련하여 해당 표준의 제안이 어떻게 해석 될 수 있는지에 대해서 논의 해 볼 것이다.
+이 상태코드 목록에는 HTTP통신의 연결 성공에서부터 서버의 서비스 오류까지 다양한 통신상태가 정리되어 있는데, 그 가운데 통신상태 및 오류코드와는 다소 거리가 멀어보이는 'I'm teapot'라는 설명의 418번 오류코드를 찾을 수 있다. 이 글에서는 418번 HTTP상태코드의 유래와 서비스 표준에 대해 알아보고, IoT서비스 설계 및 구성과 관련하여 해당 표준의 제안이 어떻게 해석 될 수 있는지에 대해서 논의 해 볼 것이다.
 
 ![http404](http404.png)
 
@@ -248,8 +248,42 @@ HTCPCP가 처음 작성될 1998년 4월 1일 당시의 사회상 및 기술 발�
 
 
 ## Refrences
+* Specification Ducument
+   * HTTP/1.1 (RFC7231) : http://tools.ietf.org/html/rfc7231
+   * HTTP Status Code : http://www.iana.org/assignments/http-status-codes
+   * HTCPCP(RFC2324) : https://tools.ietf.org/html/rfc2324
+   * HTCPCP-TEA(RFC7168) : https://tools.ietf.org/html/rfc7168
+   * Definitions of Managed Objects for Drip-Type Heated Beverage Hardware Devices using SMIv2 (RFC2325) : https://tools.ietf.org/html/rfc2325
+* Wikipedia
+   * HTTP 상태 코드 : https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
+   * 만우절 RFC 목록 : https://en.wikipedia.org/wiki/April_Fools%27_Day_Request_for_Comments
+   * short and stout : https://en.wikipedia.org/wiki/I%27m_a_Little_Teapot
+   * NTP(Network Time Protocol) : https://en.wikipedia.org/wiki/Network_Time_Protocol
+   * Ubiquitous : https://en.wikipedia.org/wiki/Ubiquitous_computing
+   * Netscape : https://en.wikipedia.org/wiki/Netscape_%28web_browser%29
+   * CGI(Common Gateway Interface) : https://en.wikipedia.org/wiki/Common_Gateway_Interface
+   * Ajax : https://en.wikipedia.org/wiki/Ajax_%28programming%29
+   * XMLHTTP : https://en.wikipedia.org/wiki/XMLHttpRequest
+   * 중간자 공격(Man in Middle Attack) : https://en.wikipedia.org/wiki/Man-in-the-middle_attack
+   * 서비스 거부 공격(Denial of Service Attack) : https://en.wikipedia.org/wiki/Denial-of-service_attack
+   * 방화벽(Firewall) : https://en.wikipedia.org/wiki/Firewall_%28computing%29
 * Image
-    * Title : http://lifeandthyme.com/wp-content/uploads/2014/11/copa-vida-featured-L.jpg
-* https://www.exceptionnotfound.net/http-418-im-a-teapot-just-a-joke-or-something-more/
-* http://meta.stackexchange.com/questions/185426/stack-overflow-returning-http-error-code-418-im-a-teapot
-* http://joereddington.com/projects/418-error-code-teapot/
+   * Title : http://lifeandthyme.com/wp-content/uploads/2014/11/copa-vida-featured-L.jpg
+   * RaspberryPI HTCPCP구현 : http://www.error418.org/2014/01/fun-with-logs-geeks.html
+   * HTCPCP 구현 YouTube Link : https://www.youtube.com/watch?v=R8B-mAHWodk
+* Articles
+   * https://sitesdoneright.com/blog/2013/03/what-is-418-im-a-teapot-status-code-error
+   * https://www.exceptionnotfound.net/http-418-im-a-teapot-just-a-joke-or-something-more/
+   * http://meta.stackexchange.com/questions/185426/stack-overflow-returning-http-error-code-418-im-a-teapot
+   * http://searchengineland.com/new-google-easter-egg-seo-geeks-server-status-418-im-teapot-201739
+* Implementations
+   * https://www.cl.cam.ac.uk/coffee/qsf/coffee.html
+   * http://joereddington.com/projects/418-error-code-teapot/
+   * http://www.error418.org/2014/01/fun-with-logs-geeks.html
+   * https://github.com/gelendir/htcpcpd
+   * http://imgur.com/a/cXQRB
+* Code Examples
+   * C implenemtation : https://github.com/madmaze/HTCPCP
+   * C Implementation (VS2015 project) : https://github.com/mechacrash/HTCPCP
+   * Phython/Django implementation : https://gist.github.com/kylef/144747
+   * Javasctipt/Node.js implementation : https://www.npmjs.com/package/htcpcp
