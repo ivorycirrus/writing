@@ -64,7 +64,7 @@ HTCPCP의 표준문서의 각 항목이 어떨게 구성되었는지 자세히 �
 
 ### 3.2 Header
 
-- 'safe' 응답 헤더 (recommended)
+- **'safe' 응답 헤더 (recommended)**<br/>
    실제로 커피를 끓여내는 과정에는 다양한 위험 요소가 존재한다. 커피포트 서버에서는 이러한 위험요소들을 식별해서 사용자에게 위험요소를 알릴 수 있다.
    커피포트의 헤더에 추가되는 안전한 상태에 대한 정보는 아래와 같은 형식으로 제공되며, 별도의 POST 명령을 구현하여 사용자가 더 편리하게 인지할 수 있는 방법으로 위험요소를 알릴 수 도 있다.
 
@@ -75,7 +75,7 @@ HTCPCP의 표준문서의 각 항목이 어떨게 구성되었는지 자세히 �
  safe-condition      = "user-awake" | token
 ```
 
-- 'Accept-Additions' 헤더
+- **'Accept-Additions' 헤더**<br/>
    'Accept-Additions'는 커피포트 서버에서는 요청헤더에 사용가능한 미디어타입을 알리기 위해 사용한다. 이 때 사용가능한 미디어타입이란 설탕/시럽의 포함여부, 우유의 종류 등등 커피를 끓이는데 있어서 취할 수 있는 부가적인 작업들을 말한다.
 
 ```
@@ -98,11 +98,11 @@ alcohol-type    = ( "Whisky" | "Rum" | "Kahlua" | "Aquavit" )
 
 ### 3.3 Status Code
 
-- 406 Not Acceptable
+- **406 Not Acceptable**<br/>
    406 Not Acceptable 헤더는 일반적으로 '요청한 헤더에 정의된 컨텐츠의 특성이 실제 리소스에 적용될 수 없거나 처리될 수 없음'을 의미한다.
    HTCPCP에서는 Accept-Additions 헤더를 통한 요청을 처리 할 수 없을 경우에 발생하는 오류코드이다.
 
-- 418 I'm a teapot
+- **418 I'm a teapot**<br/>
    찻주전자(teapot)로 커피를 끓이려 할때 '나는 차를 우려내는 찻주전자입니다' 라고 커피를 끓일 수 없음을 회신하는 오류코드. 응답 바디에 [short and stout](https://en.wikipedia.org/wiki/I%27m_a_Little_Teapot)라는 커피포트 노래를 포함 할 수 있다.
 
 ### 3.4 URI Scheme
@@ -126,7 +126,7 @@ coffee-scheme = ( "koffie"                      ; Afrikaans, Dutch
               | "%E5%92%96%E5%95%A1"       ; Chinese
               | "kava"                     ; Croatian
            | "k%C3%A1va                 ; Czech
-   ㄴ        | "kaffe"                    ; Danish, Norwegian, Swedish
+           | "kaffe"                    ; Danish, Norwegian, Swedish
            | "coffee"                   ; English
            | "kafo"                     ; Esperanto
               | "kohv"                     ; Estonian
@@ -157,12 +157,12 @@ coffee-message-body = "start" | "stop"
 ### 3.6 운영상 제약사항
 HTCPCP에는 다음과 같이 커피포트가 유비쿼터스 환경에서 개발되었을 경우 또한 고려하고 있다.
 
-* **타이밍 이슈**
+* **타이밍 이슈**<br/>
    커피포트를 이용하는 사람과 커피포트 서비스 사이에는 긴밀한 연결이 필요하다.이를 위해 커피포트는 반드시 [NTP(Network Time Protocol)](https://en.wikipedia.org/wiki/Network_Time_Protocol) 를 이용한 글로벌 시간동기화 기능을 지원해야 한다.
    기기를 원격으로 제어하는 일이 쉽지 않은 일임에도 불구하고 케임브리지 대학에서는 [The Trojan Room Coffee Machine](http://www.cl.cam.ac.uk/coffee/coffee.html)이라는 커피포트 서비스를 선보였으며, 이는 [SNMP](https://en.wikipedia.org/wiki/Simple_Network_Management_Protocol)가 아닌 웹을 이용한 방식으로 커피포트를 감시하고(monitoring) 제어(management) 할 수 있는 시스템의 구현 사례라 할 수 있다.
    웹 페이지는 일반적으로 정적(static)이므로 매번 요청 할 필요 없이, 한번 요청한 내용을 웹브라우저에 저장하여 보여주는 방식으로 구현 할 수 있다. 다만 기기의 상태나 제어와 같은 동작은 실시간으로 변하는(dynamic) 값이므로 서버에 접속 할 때마다 그 값을 갱신 해 줄 필요가 있다.
 
-* **방화벽 통과**
+* **방화벽 통과**<br/>
    대부분의 HTTP트래픽이 방화벽을 넘는 일은 그다지 어려운 일이 아니다. HTCPCP를 이용하는 커피포트는 반드시 불(fire)을 사용하지 않지만, 커피를 끓이기 위해서는 불이 아니더라도 모종의 열원이 필요할 것이고 이로인한 위험요소를 차단하는데에는 방화벽(firewall)이 유용할 것이다.
    HPCPCP의 방화벽을 이용하는 방법은 크게 어렵지 않은데, 이는 HPCPCP를 이용하는 커피포트가 홈 네트워크 방화벽의 바깥에 존재하는 시스템이며 기존의 HTTP와 같은 포트로 통신을 하기 때문에 기존 방화벽 정책을 재사용 할 수 있다. 물론 HTCPCP에 특화된 몇몇 메소드나 헤더 등을 처리하기위해 방화벽 정책을 업그레이드 할 필요가 있을 수 있지만, 홈 네트워크를 관리하는 사람도 커피를 마시는 사람일 것이기 때문에 커피포트를 위한 방화벽 정책 튜닝에 지원을 아끼지 않을 것이다.
 
