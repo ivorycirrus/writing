@@ -116,20 +116,20 @@ URI가 어떤 언어로 표현되든지 모두 동일한 의미를 지닌다. UR
 coffee-url  =  coffee-scheme ":" [ "//" 접속주소 ] ["/" 커피포트선택자 ] ["?" 부가정보목록 ]
 
 coffee-scheme = ( "koffie"                      ; Afrikaans, Dutch
-              | "q%C3%A6hv%C3%A6"          ; Azerbaijani
-              | "%D9%82%D9%87%D9%88%D8%A9" ; Arabic
+           | "q%C3%A6hv%C3%A6"          ; Azerbaijani
+           | "%D9%82%D9%87%D9%88%D8%A9" ; Arabic
            | "akeita"                   ; Basque
            | "koffee"                   ; Bengali
            | "kahva"                    ; Bosnian
            | "kafe"                     ; Bulgarian, Czech
            | "caf%C3%E8"                ; Catalan, French, Galician
-              | "%E5%92%96%E5%95%A1"       ; Chinese
-              | "kava"                     ; Croatian
+           | "%E5%92%96%E5%95%A1"       ; Chinese
+           | "kava"                     ; Croatian
            | "k%C3%A1va                 ; Czech
            | "kaffe"                    ; Danish, Norwegian, Swedish
            | "coffee"                   ; English
            | "kafo"                     ; Esperanto
-              | "kohv"                     ; Estonian
+           | "kohv"                     ; Estonian
            | "kahvi"                    ; Finnish
            | "%4Baffee"                 ; German
            | "%CE%BA%CE%B1%CF%86%CE%AD" ; Greek
@@ -229,15 +229,19 @@ HTCPCP가 처음 작성될 1998년 4월 1일 당시의 사회상 및 기술 발�
 <br/><br/>
 표준을 작성 할 때에는 이와 같이 '현재' 구현되어있는 기술만을 대상으로 작성하는 것이 아니라 다양한 확장 가능성을 염두 해 두고 작성해야 한다. 이 때, 확장 기능이 현재 구현되어 있지 않은 경우 적절한 예외처리를 할 수 있어야 하며, 향후 해당 기능과의 연동을 위한 인터페이스 또한 고려해야 작성해야 할 것이다.
 
-### 5.2 Home IoT(Internet of Things)로의 고민 : 시간동기화
+### 5.2 다국어 지원
+과거 유비쿼터스(Ubiquitous)라는 용어와 현재의 IoT(Internet of Things)라는 용어의 가장 큰 차이는 '연결'에 집중하는지 '서비스'에 집중하는지에 대한 관점의 차이에 있다. 즉, IoT란 사물을 '연결'하는데에서 그치지 않고 연결된 사물로부터의 가치 창출과, 이 가치를 일반 대중에게 전달하는 '서비스'를 고민하고 발전시켜 나아가는 일련의 과정을 의미한다. 이 IoT서비스는 인터넷 이라는 네트워크를 통해 전 세계와 연결될 수 있으며, 다양한 언어를 사용하는 다양한 지역의 사람들에게 서비스 될 수 있을 것이다. 이렇게 다양한 지역의 사용자에게 IoT서비스를 제공함에 있어서 사람과 사람이 소통하는데 사용하는 도구인 '언어'를 반드시 고려 해야 할 것이다.<br/><br/>
+국가별 언어를 표현하는 방식에는 과거로부터 여러가지 [문자 인코딩](https://en.wikipedia.org/wiki/Character_encoding) 방식이 제안되어 왔으며, 현재는 많은 곳에서 [UTF-8](https://en.wikipedia.org/wiki/UTF-8)방식으로 문자를 표시하고 있다. HTCPCP에서도 coffee-scheme의 표현에 다양한 언어의 URI표현방식에 대응 할 수 있도록 다국어 지원을 고려한 설계를 제공하고 있으며, URI표현을 위해서 일부 [ASCII](https://en.wikipedia.org/wiki/ASCII)로 표현 할 수 없는 문자의 경우 [UTF-8 Percent-Encoding](https://en.wikipedia.org/wiki/Percent-encoding)으로 표현하여 제공하고 있다.
+
+### 5.3 Home IoT(Internet of Things)로의 고민 : 시간동기화
 운영상 제약사항 파트에 보면 시간동기화에 언급이 나오고 있다. 시간동기화를 고려 한다는 것은 원격지에 있는 사물에 인터넷이 연결될 경우 발생할 수 있는 문제에 대한 고민을 함께 하고 있었다는 측면에서 큰 의의를 가질 수 있다.<BR/><BR/>
 이 글을 작성 하고 있는 지금, 서울의 한 카페에서 스마트폰의 Wifi-LTE Hotspot 무선망을 타고 원격지에 있는 (아마도) 수천~수만km 떨어진 Github저장소에 작성한 글을 저장하고 있다. 즉 지금의 우리는 '언제 어느곳이라도'  라고 말할 수 있을 정도로 인터넷에 항상 연결되어 있는 환경 그리고 지구 반대편의 리소스에도 비교적 쉽게 접근 할 수 있는 환경에 살고 있다. 이러한 환경에서 원격지에 있는 사물로부터 습득 한 정보의 작성 시간은 사용자가 위치하고 있는 지역의 시간과 다른 시간대(TimeZone)에 위치하고 있을 것이며, 더 나아가 리소스에 접속하는 사용자의PC와 실제 리소스가 위치한 시스템의 시간정보가 맞지 않을 수 있다는 것을 고려해야 한다. HTCPCP에서는 현재 많은 IoT 장치가 동작하는 방식인 NTP 시간동기화를 제안하고 있는 것을 볼 수 있다.<br/><br/>
 또한 원격지에 있는 자원으로부터의 빠른 접근을 위해 업데이트가 일어나는 부분만 리소스를 업데이트 하여 보여주는 방식을 제안 했다. 1998년 당시에는 HTTP에서 자바스크립트를 이용한 비동기 통신방법인 [Ajax](https://en.wikipedia.org/wiki/Ajax_%28programming%29)라는 개념이 표준으로 정리되기 이전이었으며, MicroSoft Outlook에서 [XMLHTTP](https://en.wikipedia.org/wiki/XMLHttpRequest) 라는 기술을 막 선보이던 시기였다. 물론 통신방법에 대한 예시로 당시 원격지와의 통신 구현사례인 ATM의 통신개념을 차용하여 기술하기도 했지만, 향후 통신기술의 발전을 감안하더라도 데이터 통신에 대한 최적화를 고민했다는 것에 큰 의의를 둘 수 있다고 본다. 데이터의 실시간 동기화라는 개념은 절대로 '실시간'데이터를 보여 줄 수는 없다. 데이터의 측정시간/인코딩(encoding)/전송/디코딩(decoding)/표출 작업에 대한 시간소요가 항상 존재하고 있으며, 이에 따라 실시간이 아닌 항상 과거의 데이터를 보여 줄 수 밖에 없다. 다만 가장 실시간에 가까운 데이터를 보여주기 위한 노력은 항상 이루어 져야 할 것이며, 이와 관련하여 전송속도 개선에 대한 고민은 꾸준히 이루어 져야 할 것이라 생각한다.
 
-### 5.3 IoT 기기와 보안
+### 5.4 IoT 기기와 보안
 HTCPCP 문서에서는 커피포트의 보안 위협에 대한 두가지 큰 요소로, [중간자 공격(Man in Middle Attack)](https://en.wikipedia.org/wiki/Man-in-the-middle_attack)과 [서비스 거부 공격(Denial of Service Attack)](https://en.wikipedia.org/wiki/Denial-of-service_attack)에 대해 언급하고 있다. 즉 인터넷에 연결된 기기는 그 URI만 알면 누구든 리소스를 요청 할 수 있으며, 데이터를 주고 받는 사이에 개입 할 가능성이 충분히 있음을 알리고 있다. 이에 대한 해결책으로 구체적으로 언급되어 있지는 않지만 접근제어의 인증에 대한 필요성을 제기 하고 있는 것 또한 찾을 수 있다. 즉, 서비스를 제공하는 실제 기기에 바로 접속하는 것이 아닌 기기를 보호 할 수 있는 인증 수단을 제공하여 외부로부터의 비정상적인 접근 및 데이터 감정을 차단해야 하며, 네트워크를 통한 공격으로 실제 서비스를 제공하는 장치의 동작에 장애를 유발 할 수 있는 요소를 사전에 차잔할 수 있는 대비책을 세워야 함을 시사한다고 볼 수 있을 것이다.
 
-### 5.4 네트워크 구성
+### 5.5 네트워크 구성
 이 HTCPCP문서를 살펴보면 여러곳에서 [방화벽(Firewall)](https://en.wikipedia.org/wiki/Firewall_%28computing%29)에 대해 이야기하고 있는 것을 볼 수 있다. 물론 곳곳에서 '커피포트는 불을 사용하지 않으니 불을 막기위한 방화벽(Firewall,防火壁)이 필요 없지 않나?'라고 재치있게 농담을 하고 있으나, 보안을 언급한 파트에서는 '그래도 모종의 열원을 사용하니 방화박이 필요하다'라며 방화벽의 필요성에 대한 의견을 밝히고 있다. <br/><br/>
 하지만, 운영상 제약사항에서의 방화벽 통과 항목은 좀더 유심히 봐야 할 필요가 있다. HTCPCP는 HTTP와 같은 포트를 사용하기 때문에 80번 포트에 대한 처리를 같이 사용 할 수 있다는 장점을 언급하며, HTTP서비스를 이용하는 것이 기존의(Legacy)시스템을 확장 할 때에 큰 장점으로 작용하고 있음을 말하고 있다. 또한 확장 메소드를 처리하기 위해 방화벽 정책에 변경이 필요 할 수 있음을 언급하며 '시스템 관리자도 커피를 마시니 커피포트에 대한 방화벽 예외처리는 잘 해줄 것이다'라고 이야기 하는 것은, 마치 신규 시스템 개발로 인한 보안 예외사항을 추가하고자 할 때 개발팀과 운영/보안팀 사이의 관점의 차이 및 의견조율의 필요성을 암시하는 것 처럼 보인다.<br/><br/>
 즉, 새로운 서비스 및 통신 규약을 추가한다는 것은 기존의 네트워크 구성에 영향을 줄 수도 있다는 것을 충분히 인지해야 한다. 또한 기존 시스템이 제공하던 서비스에 어떤 영향이 있는지, 보안적인 위협은 없는지 시스템 개발팀과 운영/보안팀이 서로 협력하여 꼼꼼하게 분석하고 합리적인 해결방안을 찾아가는 것이 바람직 할 것이다.
@@ -262,6 +266,10 @@ HTCPCP 문서에서는 커피포트의 보안 위협에 대한 두가지 큰 요
    * Ubiquitous : https://en.wikipedia.org/wiki/Ubiquitous_computing
    * Netscape : https://en.wikipedia.org/wiki/Netscape_%28web_browser%29
    * CGI(Common Gateway Interface) : https://en.wikipedia.org/wiki/Common_Gateway_Interface
+   * 문자 인코딩 : https://en.wikipedia.org/wiki/Character_encoding
+   * UTF-8 : https://en.wikipedia.org/wiki/UTF-8
+   * ASCII : https://en.wikipedia.org/wiki/ASCII
+   * Percent-Encoding : https://en.wikipedia.org/wiki/Percent-encoding
    * Ajax : https://en.wikipedia.org/wiki/Ajax_%28programming%29
    * XMLHTTP : https://en.wikipedia.org/wiki/XMLHttpRequest
    * 중간자 공격(Man in Middle Attack) : https://en.wikipedia.org/wiki/Man-in-the-middle_attack
