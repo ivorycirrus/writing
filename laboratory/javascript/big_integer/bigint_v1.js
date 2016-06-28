@@ -15,7 +15,7 @@
 			this._arrBigInt = obj._arrBigInt;
 		} else if(typeof obj === "number"){
 			if(obj < 0) {
-				this._sign = "-1";
+				this._sign = -1;
 				this._arrBigInt = (""+(-1*obj)).split("").reverse();
 			} else {
 				this._sign = 1;
@@ -70,5 +70,43 @@
 		// large absolute value is small number if sign is negative
 		return this._sign*absDiffer;
 	};
+
+	// add
+	// @param (BigInt) x 
+	// @return (BigInt) sum value;
+	scope.BigInt.prototype.add = function(x) {
+		//substract when signs are diffrent.
+		if(this._sign*x._sign < 0) {
+			var copyOfX = new scope.BigInt(x);
+			copyOfX._sign *= -1;
+			return this.sub(copyOfX);
+		}
+
+		//for same sign, choose base number which has large absolute number
+		var base, addee, sum, overflow;
+		if( (this.compare(x) > 0) * this._sign > 0) {
+			base = this; addee = x;
+		} else {
+			base = x ; addee = this;
+		}
+
+		//calculate sum and overflow of each digits.
+		var result = new BigInt(base._sign);
+		result._arrBigInt = []; overflow = 0;
+		for(var n = 0 ; n < base._arrBigInt.length ; n++) {
+			sum = parseInt(base._arrBigInt[n]) + overflow;
+			if(n < addee._arrBigInt.length) sum += parseInt(addee._arrBigInt[n]);
+
+			overflow = parseInt(sum/10);
+			sum = sum%10;
+
+			result._arrBigInt.push(""+sum);
+		}
+
+		//if overflow remains, add magnificient value of result
+		if(overflow > 0) result._arrBigInt.push(""+overflow);
+		
+		return result;
+	}
 
 })(window);
