@@ -12,7 +12,7 @@
 			this._arrBigInt = ['0'];
 		} else if(obj instanceof scope.BigInt) {
 			this._sign = obj._sign;
-			this._arrBigInt = obj._arrBigInt;
+			this._arrBigInt = obj._arrBigInt.slice(0);
 		} else if(typeof obj === "number"){
 			if(obj < 0) {
 				this._sign = -1;
@@ -37,8 +37,8 @@
 	// toString
 	// @return (String) value of bignumber string with sign
 	scope.BigInt.prototype.toString = function() {
-		var str = this._arrBigInt.reverse().join("");
-		return this._sign<0?('-'+str):str;
+		var str = this._arrBigInt.slice(0).reverse().join("");
+		return (this._sign<0 && !(this._arrBigInt.length === 1 && this._arrBigInt[0] === '0'))?('-'+str):str;
 	};
 
 	// compare
@@ -105,8 +105,51 @@
 
 		//if overflow remains, add magnificient value of result
 		if(overflow > 0) result._arrBigInt.push(""+overflow);
-		
+
 		return result;
-	}
+	};
+
+	// sub
+	// @param (BigInt) x 
+	// @return (BigInt) substract value;
+	scope.BigInt.prototype.sub = function(x) {
+		//add when signs are diffrent.
+		if(this._sign*x._sign < 0) {
+			var copyOfX = new scope.BigInt(x);
+			copyOfX._sign *= -1;
+			return this.add(copyOfX);
+		}
+
+		//for same sign, choose base number which has large absolute number
+		var base, subee, sub, underflow, result;
+		if( (this.compare(x) > 0) * this._sign > 0) {
+			base = this; subee = x;
+			result = new BigInt(base._sign);
+		} else {
+			base = x ; subee = this;
+			result = new BigInt(base._sign*-1);
+		}
+
+		//calculate substract and underlfow
+		result._arrBigInt = []; underflow = 0;
+		for(var n = 0 ; n < base._arrBigInt.length ; n++) {
+			sub = parseInt(base._arrBigInt[n]) + underflow;
+			if(n < subee._arrBigInt.length) sub -= parseInt(subee._arrBigInt[n]);
+			if(sub < 0){
+				underflow = -1;
+				sub += 10;
+			} else {
+				underflow = 0;
+			}
+			result._arrBigInt.push(""+sub);
+		}
+
+		//remove zero headings
+		while(result._arrBigInt.length > 1 && result._arrBigInt[result._arrBigInt.length-1] === '0') {
+			result._arrBigInt.pop();
+		}
+
+		return result;
+	};
 
 })(window);

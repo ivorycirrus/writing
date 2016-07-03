@@ -33,3 +33,21 @@ console.log(anum7.add(anum7).toString());
 console.log(anum2m.add(anum7m).toString());
 console.log(anum9m.add(anum9m).toString());
 
+console.log("==[ sub same sign ]========");
+var snum1p = new BigInt("1111");
+var snum2p = new BigInt("2222");
+var snum2m = new BigInt("-2222");
+var snum90a = new BigInt("90001");
+
+console.log(snum2p + " - " + snum1p + " = " + snum2p.sub(snum1p));
+console.log(snum2p + " - " + snum2p + " = " + snum2p.sub(snum2p));
+console.log(snum2m + " - " + snum2p + " = " + snum2m.sub(snum2p));
+console.log(snum1p + " - " + snum2p + " = " + snum1p.sub(snum2p));
+console.log(snum90a + " - " + snum2p + " = " + snum90a.sub(snum2p));
+console.log(anum7m + ' - ' + anum9m + ' = ' + anum7m.sub(anum9m));
+
+console.log("==[ add/sub different sign ]========");
+console.log(snum2p + ' + ' + snum2m + ' = ' + snum2p.add(snum2m));
+console.log(snum2m + ' + ' + snum2p + ' = ' + snum2m.add(snum2p));
+console.log(snum2p + ' - ' + snum2m + ' = ' + snum2p.sub(snum2m));
+console.log(snum2m + ' - ' + snum2p + ' = ' + snum2m.sub(snum2p));
