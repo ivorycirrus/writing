@@ -34,6 +34,15 @@
 		}
 	};
 
+	// clone
+	// @return (BigInt) deep copy of BigInt
+	scope.BigInt.prototype.clone = function() {
+		var copyObj = new BigInt();
+		copyObj._sign = this._sign;
+		copyObj._arrBigInt = this._arrBigInt.slice(0);
+		return copyObj;
+	};
+
 	// toString
 	// @return (String) value of bignumber string with sign
 	scope.BigInt.prototype.toString = function() {
