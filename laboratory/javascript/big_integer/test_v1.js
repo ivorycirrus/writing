@@ -51,3 +51,29 @@ console.log(snum2p + ' + ' + snum2m + ' = ' + snum2p.add(snum2m));
 console.log(snum2m + ' + ' + snum2p + ' = ' + snum2m.add(snum2p));
 console.log(snum2p + ' - ' + snum2m + ' = ' + snum2p.sub(snum2m));
 console.log(snum2m + ' - ' + snum2p + ' = ' + snum2m.sub(snum2p));
+
+console.log("==[ multiply ]========");
+var m1 = new BigInt("12");
+var m2 = new BigInt("20");
+var m3 = new BigInt("-34");
+var m4 = new BigInt("-50");
+
+console.log(m1 + " * " + m1 + " = " + m1.multiply(m1));
+console.log(m1 + " * " + m2 + " = " + m1.multiply(m2));
+console.log(m2 + " * " + m2 + " = " + m2.multiply(m2));
+console.log(m1 + " * " + m4 + " = " + m1.multiply(m4));
+console.log(m3 + " * " + m2 + " = " + m3.multiply(m2));
+console.log(m3 + " * " + m4 + " = " + m3.multiply(m4));
+
+console.log("==[ factorials ]========");
+var fac = 1;
+var facBigInt = new BigInt(1);
+for(var inx = 1 ; inx <= 100 ; inx++ ){
+	fac *= inx; facBigInt = facBigInt.multiply(new BigInt(inx));
+	console.log(inx+"!  =>  actual : "+fac+"  / bigint : "+facBigInt.toString());
+}
+
+
+
+
+

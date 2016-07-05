@@ -3,7 +3,7 @@
 	scope.BigInt = function(obj){
 		// Constants
 		//var REGEXP_FLOAT = /^-?\d+\.?\d*$/;
-		this.REGEXP_INT = /^[-,+]?\d+$/;
+		var REGEXP_INT = /^[-,+]?\d+$/;
 
 		// Type Check & value set
 		if(obj === undefined)
@@ -21,7 +21,7 @@
 				this._sign = 1;
 				this._arrBigInt = (""+obj).split("").reverse();
 			}
-		} else if(typeof obj === "string" && this.REGEXP_INT.test(obj)){
+		} else if(typeof obj === "string" && REGEXP_INT.test(obj)){
 			this._arrBigInt = obj.split("");
 			if(/^[+,-]$/.test(this._arrBigInt[0])) this._sign = parseInt(this._arrBigInt.shift() + "1");
 			else this._sign = 1;
@@ -156,6 +156,58 @@
 		//remove zero headings
 		while(result._arrBigInt.length > 1 && result._arrBigInt[result._arrBigInt.length-1] === '0') {
 			result._arrBigInt.pop();
+		}
+
+		return result;
+	};
+
+	// multiply
+	// @param (BigInt) x 
+	// @return (BigInt) x-times value;
+	scope.BigInt.prototype.multiply = function(x) {
+		var base, multiplier, result, temp, overflow, lineArr;
+
+		// choose base number which has long digits
+		if( this._arrBigInt.length > x._arrBigInt.length) {
+			base = this; multiplier = x;
+		} else {
+			base = x ; multiplier = this;
+		}
+
+		// init result variables
+		result = new BigInt(0);
+		result._sign = this._sign*x._sign;
+
+		// calculate multiply
+		for(var n = 0 ; n < multiplier._arrBigInt.length ; n++) {
+			var multiplyValue = parseInt(multiplier._arrBigInt[n]); 
+
+			if(multiplyValue == 0) {
+				// someone * 0 = 0
+				continue;
+			} else if(multiplyValue == 1) {
+				// someone * 1 = someone
+				lineArr = base._arrBigInt.slice(0);
+			} else {
+				// multiply base by each digit of multiplier
+				overflow = 0; temp = 0; lineArr = [];
+				for(var d = 0 ; d < base._arrBigInt.length ; d++) {
+					temp = (parseInt(base._arrBigInt[d]) * multiplyValue) + overflow;
+					overflow = parseInt(temp/10);
+					lineArr.push(""+temp%10);
+				}
+				if(overflow > 0) lineArr.push(""+overflow);
+			}
+
+			// 0 padding for shifting digits
+			for(var digit = 0 ; digit < n ; digit++) {
+				lineArr.unshift("0");
+			}
+
+			// sum multiply value
+			var lineValue = new BigInt(result._sign);
+			lineValue._arrBigInt = lineArr;
+			result = result.add(lineValue);
 		}
 
 		return result;
