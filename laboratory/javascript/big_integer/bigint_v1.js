@@ -52,7 +52,7 @@
 
 	// compare
 	// @param (BigInt) x 
-	// @return (Integer) -1 : this is smaller than x, 0 : same , 1 : x is larger thxn x
+	// @return (Integer) -1 : this is smaller than x, 0 : same , 1 : this is larger than x
 	scope.BigInt.prototype.compare = function(x) {
 		if( !(x instanceof scope.BigInt)) {
 			throw "IllegalArgumentException";
@@ -62,13 +62,24 @@
 		// sign differ
 		if(this._sign*x._sign < 0) return this._sign;
 
-		// sign same, length differ
+		// same sign
+		var absDiffer = this.absCompare(x);
+
+		// large absolute value is small number if sign is negative
+		return this._sign*absDiffer;
+	};
+
+	// absCompare : compare absolute value
+	// @param (BigInt) x 
+	// @return (Integer) -1 : this is smaller than x, 0 : same , 1 : this is larger than x
+	scope.BigInt.prototype.absCompare = function(x) {
+		// length differ
 		if(this._arrBigInt.length > x._arrBigInt.length) return 1;
 		else if(this._arrBigInt.length < x._arrBigInt.length) return -1;
 
-		// sign same, length same
+		// length same
 		var absDiffer = 0;
-		for(var inx = 0 ; inx < this._arrBigInt.length ; inx++){
+		for(var inx = this._arrBigInt.length-1 ; inx >= 0  ; inx--){
 			if(this._arrBigInt[inx] != x._arrBigInt[inx]) {
 				if(this._arrBigInt[inx] > x._arrBigInt[inx]) absDiffer = 1; 
 				else absDiffer = -1;
@@ -76,8 +87,7 @@
 			}	
 		}
 
-		// large absolute value is small number if sign is negative
-		return this._sign*absDiffer;
+		return absDiffer;
 	};
 
 	// add
@@ -165,7 +175,7 @@
 	// @param (BigInt) x 
 	// @return (BigInt) x-times value;
 	scope.BigInt.prototype.multiply = function(x) {
-		var base, multiplier, result, temp, overflow, lineArr;
+		var base, multiplier, result, temp, overflow, lineArr; 
 
 		// choose base number which has long digits
 		if( this._arrBigInt.length > x._arrBigInt.length) {
@@ -211,6 +221,87 @@
 		}
 
 		return result;
+	};
+
+	// divide
+	// @param (BigInt) x 
+	// @return (Array[BigInt,BigInt]) quotient, renains;
+	scope.BigInt.prototype.divide = function(x) {
+		// prevent devide by 0
+		if(x._arrBigInt.length == 1 && x._arrBigInt[0] == "0") {
+			throw "DivideByZeroException";
+			return;
+		}
+
+		// absolute value of divosor is greater or equal than dividend
+		var compareWithDivisor = this.absCompare(x); 
+		if(compareWithDivisor < 0) {
+			return [
+				new BigInt(0), // quotient
+				this.clone()   // remains
+			];
+		} else if(compareWithDivisor == 0) {
+			return [
+				new BigInt(1), // quotient
+				new BigInt(0)  // remains
+			];
+		}
+
+		var tmpQuotient;
+		var tmpDividend = new BigInt(0); tmpDividend._arrBigInt = [];
+		var quotient = new BigInt(0), dividend = this.clone();
+		for(var offset = this._arrBigInt.length - x._arrBigInt.length ; offset >= 0 ; offset--) {
+			tmpDividend._arrBigInt = tmpDividend._arrBigInt.concat(dividend._arrBigInt.splice(offset));
+
+			//remove zero headings for dividend
+			removeZeroHeadings(tmpDividend)
+
+			var tmpCompare = tmpDividend.absCompare(x);
+			if(tmpCompare < 0) {
+				tmpQuotient = 0;
+			} else if( tmpCompare == 0 ) {
+				tmpQuotient = 1;
+			} else {
+				tmpQuotient = 1;
+				while(tmpQuotient < 10) {
+					var lineCheck = x.multiply(new BigInt(tmpQuotient+1)).compare(tmpDividend);
+					if(lineCheck > 0) {
+						tmpDividend = tmpDividend.sub(x.multiply(new BigInt(tmpQuotient)));
+						break;
+					} else if(lineCheck == 0) {
+						tmpDividend = new BigInt(0);
+						break;
+					}
+					tmpQuotient++;
+				}
+			}
+
+			//removeZeroHeadings(quotient);
+			quotient._arrBigInt.unshift(""+tmpQuotient);
+			removeZeroHeadings(quotient);
+		}
+
+		//remove zero headings for quotient
+		removeZeroHeadings(quotient);
+
+		tmpDividend._arrBigInt = tmpDividend._arrBigInt.concat(dividend._arrBigInt.splice(0));
+		var remains = removeZeroHeadings(tmpDividend).clone();
+
+		return [quotient, remains];
+	};
+
+	// remove zero headings for BigInt
+	/*private*/ function removeZeroHeadings(bi) {
+		if( !(bi instanceof scope.BigInt)) {
+			throw "IllegalArgumentException";
+			return;
+		}
+
+		while(bi._arrBigInt.length > 1 && bi._arrBigInt[bi._arrBigInt.length-1] === '0') {
+			bi._arrBigInt.pop();
+		}
+
+		return bi;
 	};
 
 })(window);
