@@ -1,8 +1,21 @@
 <!DOCTYPE HTML>
 <HTML>
-<BODY>
+<BODY onload="runExample()">
 	<H2>Example</H2>
 	<SCRIPT src="bigint_v1.js"></SCRIPT>
-	<SCRIPT src="test_v1.js"></SCRIPT>
+	<SCRIPT src="factorial.js"></SCRIPT>
+	<SCRIPT src="prime.js"></SCRIPT>
+
+	<div id="result"></div>
+
+	<script>
+		function runExample(){
+			var result = document.getElementById("result");
+			
+			var strFact100 = facrotials();
+
+			result.innerText = strFact100;
+		}
+	</script>
 </BODY>
 </HTML>
