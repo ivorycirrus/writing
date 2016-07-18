@@ -2,7 +2,6 @@
 	// Constructor
 	scope.BigInt = function(obj){
 		// Constants
-		//var REGEXP_FLOAT = /^-?\d+\.?\d*$/;
 		var REGEXP_INT = /^[-,+]?\d+$/;
 
 		// Type Check & value set
@@ -289,6 +288,38 @@
 
 		return [quotient, remains];
 	};
+
+	// Find square root in approximately 10 digits
+	// @param (void)
+	// @return (BigInt) square root of this
+	scope.BigInt.prototype.sqrt = function() {
+		if(this._sign < 0) return undefined;
+		else if(this.compare(new BigInt(100)) < 0) return BigInt(Math.sqrt(this.toString()).ceil());
+		else {
+			var _n = parseInt( (this._arrBigInt.length+1) / 2 ) - 1;
+			var _2n = _n*2;
+			var _x = (this._arrBigInt.slice(_2n).reverse().join(''))+"."+(this._arrBigInt.slice((_2n>10)?(_2n-10):0,_2n).reverse().join(''));
+
+			var sqrtX = Math.sqrt(parseFloat(_x)).toString().split('.');
+			console.log(_n + " / sqrtX : "+Math.sqrt(parseFloat(_x)))
+
+			var result = [sqrtX[0]];
+			var expTerm = sqrtX[1].split('');
+			for(var inx = 0 ; inx < _n ; inx++){
+				if(inx < expTerm.length) {
+					if(inx==(expTerm.length-1)){
+						result.push(parseInt(expTerm[inx])+1);
+					} else {
+						result.push(expTerm[inx]);
+					}
+				} else {
+					result.push("0");
+				}
+			}
+
+			return new BigInt(result.join(''));
+		}
+	}
 
 	// remove zero headings for BigInt
 	/*private*/ function removeZeroHeadings(bi) {
