@@ -250,10 +250,10 @@
 		var tmpDividend = new BigInt(0); tmpDividend._arrBigInt = [];
 		var quotient = new BigInt(0), dividend = this.clone();
 		for(var offset = this._arrBigInt.length - x._arrBigInt.length ; offset >= 0 ; offset--) {
-			tmpDividend._arrBigInt = tmpDividend._arrBigInt.concat(dividend._arrBigInt.splice(offset));
+			tmpDividend._arrBigInt = dividend._arrBigInt.splice(offset).concat(tmpDividend._arrBigInt);
 
 			//remove zero headings for dividend
-			removeZeroHeadings(tmpDividend)
+			removeZeroHeadings(tmpDividend);
 
 			var tmpCompare = tmpDividend.absCompare(x);
 			if(tmpCompare < 0) {
@@ -268,6 +268,7 @@
 						tmpDividend = tmpDividend.sub(x.multiply(new BigInt(tmpQuotient)));
 						break;
 					} else if(lineCheck == 0) {
+						tmpQuotient++;
 						tmpDividend = new BigInt(0);
 						break;
 					}
@@ -294,15 +295,13 @@
 	// @return (BigInt) square root of this
 	scope.BigInt.prototype.sqrt = function() {
 		if(this._sign < 0) return undefined;
-		else if(this.compare(new BigInt(100)) < 0) return BigInt(Math.sqrt(this.toString()).ceil());
+		else if(this.compare(new BigInt(100)) < 0) return new BigInt(Math.ceil(Math.sqrt(this.toString())));
 		else {
 			var _n = parseInt( (this._arrBigInt.length+1) / 2 ) - 1;
 			var _2n = _n*2;
 			var _x = (this._arrBigInt.slice(_2n).reverse().join(''))+"."+(this._arrBigInt.slice((_2n>10)?(_2n-10):0,_2n).reverse().join(''));
 
 			var sqrtX = Math.sqrt(parseFloat(_x)).toString().split('.');
-			console.log(_n + " / sqrtX : "+Math.sqrt(parseFloat(_x)))
-
 			var result = [sqrtX[0]];
 			var expTerm = sqrtX[1].split('');
 			for(var inx = 0 ; inx < _n ; inx++){
