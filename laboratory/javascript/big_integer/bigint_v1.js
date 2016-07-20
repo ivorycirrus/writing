@@ -253,13 +253,14 @@
 			tmpDividend._arrBigInt = dividend._arrBigInt.splice(offset).concat(tmpDividend._arrBigInt);
 
 			//remove zero headings for dividend
-			removeZeroHeadings(tmpDividend);
+			removeZeroHeadings(tmpDividend)
 
 			var tmpCompare = tmpDividend.absCompare(x);
 			if(tmpCompare < 0) {
 				tmpQuotient = 0;
 			} else if( tmpCompare == 0 ) {
 				tmpQuotient = 1;
+				tmpDividend = new BigInt(0);
 			} else {
 				tmpQuotient = 1;
 				while(tmpQuotient < 10) {
@@ -303,7 +304,7 @@
 
 			var sqrtX = Math.sqrt(parseFloat(_x)).toString().split('.');
 			var result = [sqrtX[0]];
-			var expTerm = sqrtX[1].split('');
+			var expTerm = (sqrtX[1])?sqrtX[1].split(''):'';
 			for(var inx = 0 ; inx < _n ; inx++){
 				if(inx < expTerm.length) {
 					if(inx==(expTerm.length-1)){
