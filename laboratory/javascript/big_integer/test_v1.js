@@ -67,4 +67,18 @@ function test(){
 	result.innerText += m3 + " * " + m2 + " = " + m3.multiply(m2)+ "\n";
 	result.innerText += (m3 + " * " + m4 + " = " + m3.multiply(m4)+ "\n");
 
+	result.innerText += "\n"+"==[ divide ]========"+ "\n";
+	for(var i = 0 ; i < 100 ; i++){
+		var intA = parseInt(Math.random()*100000);
+		var intB = parseInt(Math.random()*100000);
+		var intDiv = parseInt(intA/intB);
+		var bigDiv = (new BigInt(intA)).divide(new BigInt(intB));
+
+		var res = "["+(intDiv.toString()==bigDiv[0].toString())+"] ";
+		res += intA + " / " + intB + " = ";
+		res += bigDiv[0].toString() + " ... "+bigDiv[1].toString()+"\n";
+		
+		result.innerText +=res;
+	}
+
 }
