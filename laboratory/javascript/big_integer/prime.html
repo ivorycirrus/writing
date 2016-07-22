@@ -11,12 +11,16 @@
 		function runExample(){
 			var result = document.getElementById("result");
 			
-			var primeList = findPrimeNumber(10000);
+			var maxNum = new BigInt(100000);
+			var startAt = Date.now();
+			
+			var primeList = findPrimeNumber(maxNum);
+			var runningTime = (Date.now() - startAt)/1000; 
 
-			var resStr = "";
+			var resStr = "Calculate prime number under "+maxNum.toString()+"\ntime spent : "+runningTime+" sec\n";
 			for(var inx = 0 ; inx < primeList.length ; inx++) {
-				resStr += primeList[inx].toString() + ' , ';
 				if(inx%5 == 0) resStr += '\n';
+				resStr += primeList[inx].toString() + ' , ';
 			}
 
 			result.innerText = resStr;

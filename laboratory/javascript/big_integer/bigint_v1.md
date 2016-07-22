@@ -12,7 +12,7 @@
 
 ### 목표 구현물
 * 100! 계산
-* 0 < x < 10^100 ,x ∈ Z 일 때 [소수계량함수 π(x)](https://ko.wikipedia.org/wiki/%EC%86%8C%EC%88%98_%EA%B3%84%EB%9F%89_%ED%95%A8%EC%88%98) 값 계산
+* ```Number.MAX_SAFE_INTEGER```보다 큰 소수 구하기
 
 ## 2. Variables
 ### sign
