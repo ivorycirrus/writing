@@ -4,6 +4,8 @@
 자바스크립트로 코드를 작성하다 큰 숫자는 어떻게 표현할까에 대해 고민해 본 적이 있었다.<br/>
 Java언어의 경우 [java.math.BigInteger](https://docs.oracle.com/javase/7/docs/api/java/math/BigInteger.html) 라는 클래스를 제공하고 있는데, 이와 비슷한 역할을 하는 것을 자바스크립트로 구현해 보고자 시작을 했다.
 
+아래로 포함될 예제는 [ECMA-Script 5](https://en.wikipedia.org/wiki/ECMAScript#5th_Edition)을 기준으로 작성할 것이며, Chrome 52.0.2743.82 (64-bit) 버전에서 테스트 한 코드이다.
+
 큰 수를 표현하는 가장 간단한 예로 100!을 구해보자.<br/>
 아래는 함수의 재귀호출을 통해 100!을 구하는 자바스크립트 코드와 실행결과다.
 ```javascript
@@ -13,13 +15,15 @@ Java언어의 경우 [java.math.BigInteger](https://docs.oracle.com/javase/7/doc
 9.33262154439441e+157
 ```
 
-그런데 실행 결과가 지수가 포함된 실수 형식으로 출력이 되고 있음을 볼 수 있다. 이는 100!이 자바스크립트에서 취급가능한 정수의 범위를 넘기 때문이다.<br/>
-자바스크립트에서 안전하게 표현가능한 정수의 범위는 아래와 같으며, 이 이상의 수를 표현하기 위해서는 Number객체가 아닌 다른 방법을 고민해야 할 것이다.
+그런데 실행 결과가 지수가 포함된 실수 형식으로 출력이 되서 전체 숫자를 확인할수 없었다. 이는 100!의 계산 결과가 자바스크립트에서 취급가능한 정수의 범위를 넘기 때문에 지수부와 가수부로 표현하는 실수 형식으로 변환되어 보여지고 있다. 이보다 좀더 큰, 실수의 범위를 넘는 수를 표현하고자 할 경우 결과로 ```Infinite```라고 출력되어 유효숫자의 일부조차 확인 할 수 없는 상황도 발생 할 수 있다. <br/>
+자바스크립트에서 안전하게 표현가능한 정수와 실수의 범위는 아래와 같으며, 이 이상의 수를 표현하기 위해서는 Number객체가 아닌 다른 방법을 고민해야 할 것이다.
 ```javascript
-console.log(Number.MAX_SAFE_INTEGER);
+console.log("Max Safe Integer : "+Number.MAX_SAFE_INTEGER);
+console.log("Max Number : "+Number.MAX_VALUE);
 ```
 ```
-9007199254740991
+Max Safe Integer : 9007199254740991
+Max Number : 1.7976931348623157e+308
 ```
 
 ## 2. 큰 정수의 표현
@@ -52,42 +56,26 @@ console.log(Number.MAX_SAFE_INTEGER);
 ### 2.2 생성자
 큰 정수를 표현하기위해 ```BigInt```라는 자료형을 다음과 같이 선언하고, 숫자 및 문자열을 입력받을 수 있는 생성자를 정의한다.
 
+생성자는 다음을 인자로 받을 수 있으며, BigInt객체로 변활 할 수 없는 파라메터 입력시 ```IllegalArgumentException``` 예외를 발생시킨다.
+* **undefined** : 0 으로 초기화
+* **BigInt** : 입력받은 BigInt객체로 초기화. 해당 객체의 깊은 복사(deep clone)에 해당한다.
+* **number** : 입력받은 number로 초기화. 단, 소수점 아래는 버림
+* **string** : 입력받은 문자열로 초기화. 단, 숫자 형식의 문자열만 허용.
+
+다음과 같이 BigInt 객체를 생성 할 수 있다.
 ```javascript
-(function(scope){
-	// Constructor
-	scope.BigInt = function(obj){
-		// Constants
-		var REGEXP_INT = /^[-,+]?\d+$/;
-
-		// Type Check & value set
-		if(obj === undefined)
-		{
-			this._sign = 1;
-			this._arrBigInt = ['0'];
-		} else if(obj instanceof scope.BigInt) {
-			this._sign = obj._sign;
-			this._arrBigInt = obj._arrBigInt.slice(0);
-		} else if(typeof obj === "number"){
-			if(obj < 0) {
-				this._sign = -1;
-				this._arrBigInt = (""+(-1*obj)).split("").reverse();
-			} else {
-				this._sign = 1;
-				this._arrBigInt = (""+obj).split("").reverse();
-			}
-		} else if(typeof obj === "string" && REGEXP_INT.test(obj)){
-			this._arrBigInt = obj.split("");
-			if(/^[+,-]$/.test(this._arrBigInt[0])) this._sign = parseInt(this._arrBigInt.shift() + "1");
-			else this._sign = 1;
-
-			this._arrBigInt.reverse();
-			while(this._arrBigInt[this._arrBigInt.length-1] === '0') this._arrBigInt.pop();
-		} else {
-			throw ("IllegalArgumentException : "+obj);
-			return;
-		}
-	};
-})(window);
+var bint1 = new BigInt();      // parameter : undefined
+var bint2 = new BigInt(bint1); // parameter : BigInt
+var bint3 = new BigInt(-1234); // parameter : number
+var bint2 = new BigInt("567"); // parameter : string
 ```
+
+## 3. 큰 정수의 연산
+다음은 앞서 정의한 ```BigInt```객체의 연산을 정의한다.<br/>
+* ```BigInt```객체는 **덧셈, 뺄셈, 곱셈** 연산에 닫혀있으며, **비교, 나눗셈**연산을 부분적으로 지원한다.
+* 각 연산은 연산의 대상이 되는 객체의 멤버함수로 정의하며, 해당 객체의 값을 직접 변화시키지 않는다.
+* 비교 연산은 두 BigInt객체의 크기를 비교하며, 그 연산의 크다,같다,작다에 해당하는 -1, 0, 1의 값을 반환한다.
+* 나눗셈 연산은 BigInt 객체 두개로 이루어진 배열을 반환한다. 배열의 첫번째 원소는 몫, 두번째 원소는 나머지에 해당한다.
+* 나눗셈결과의 나머지는 항상 양수 값을 가진다.
 
 
