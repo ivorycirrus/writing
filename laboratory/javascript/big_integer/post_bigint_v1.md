@@ -67,12 +67,56 @@ Max Number : 1.7976931348623157e+308
 var bint1 = new BigInt();      // parameter : undefined
 var bint2 = new BigInt(bint1); // parameter : BigInt
 var bint3 = new BigInt(-1234); // parameter : number
-var bint2 = new BigInt("567"); // parameter : string
+var bint4 = new BigInt("567"); // parameter : string
+```
+
+### 2.3 내장함수
+새로 정의한 큰 정수를 표현하는 BigInt객체는 기본 자료형(primitive type)이 아니기 때문에, 값의 대입 및 출력을 위한 기능이 필요하다.<br/>
+아래는 BigInt 객체의 내장함수의 종류와 그 동작에 대한 설명이다.
+
+#### 2.3.1 toString
+toString 함수는 객체 안에 저장된 값을 string 형식으로 변환하여 출력하는 기능을 제공한다.
+
+BigInt는 수의 부호화 절대값을 분리하여 저장하고 있다.<br/>
+toString함수는 아래 코드와 같이 두 줄로 구성되어 있으며 각 줄에서 수행하는 작업은 다음과 같다.
+
+1. 절대값을 배열로 저장하고 있는 _arrBigInt의 직렬화(serialize)
+   * 배열 객체를 복사한다.  : ```.slice(0)```
+   * 작은 수가 앞에 위치한(Little Endian) 배열을 큰 수가 앞으로 오도록 순서를 뒤집는다. : ```.reverse()```
+   * 배열의 각 원소를 구분자 없이 하나의 문자열로 합친다. : ```.join("")```
+2. 부호 삽입
+   * _sign 값이 -1 인 경우에만 문자열 앞에 ```-```를 붙인다. +1인 경우 수 앞에 별도로 부호를 표시하지 않는다.
+   * _arrBigInt에 저장된 값이 ```["0"]```인 경우 부호를 붙이지 않는다.
+
+```javascript
+// toString
+// @return (String) value of bignumber string with sign
+scope.BigInt.prototype.toString = function() {
+    var str = this._arrBigInt.slice(0).reverse().join("");
+    return (this._sign<0 && !(this._arrBigInt.length === 1 && this._arrBigInt[0] === '0'))?('-'+str):str;
+};
+```
+
+### 2.3.2 clone
+BigInt 객체의 깊은 복사(deep clone)를 위한 기능을 제공한다.
+
+아래 코드와 같이 BigInt객체를 생성하고, 원본객체의 부호화 배열을 복사하여 추가한다.<br/>
+배열의 복사에는 자바스크립트의 Array객체의 내장함수인 slice가 배열의 깊은 복사를 생성한다는 점을 이용하여 구현했다.
+
+```javascript
+// clone
+// @return (BigInt) deep copy of BigInt
+scope.BigInt.prototype.clone = function() {
+    var copyObj = new BigInt();
+    copyObj._sign = this._sign;
+    copyObj._arrBigInt = this._arrBigInt.slice(0);
+    return copyObj;
+};
 ```
 
 ## 3. 큰 정수의 연산
 다음은 앞서 정의한 ```BigInt```객체의 연산을 정의한다.<br/>
-* ```BigInt```객체는 **덧셈, 뺄셈, 곱셈** 연산에 닫혀있으며, **비교, 나눗셈**연산을 부분적으로 지원한다.
+* ```BigInt```객체는 **덧셈, 뺄셈, 곱셈** 연산에 닫혀있으며, **비교, 나눗셈**연산을 지원한다.
 * 각 연산은 연산의 대상이 되는 객체의 멤버함수로 정의하며, 해당 객체의 값을 직접 변화시키지 않는다.
 * 비교 연산은 두 BigInt객체의 크기를 비교하며, 그 연산의 크다,같다,작다에 해당하는 -1, 0, 1의 값을 반환한다.
 * 나눗셈 연산은 BigInt 객체 두개로 이루어진 배열을 반환한다. 배열의 첫번째 원소는 몫, 두번째 원소는 나머지에 해당한다.
