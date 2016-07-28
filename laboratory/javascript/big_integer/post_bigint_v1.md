@@ -122,4 +122,83 @@ scope.BigInt.prototype.clone = function() {
 * 나눗셈 연산은 BigInt 객체 두개로 이루어진 배열을 반환한다. 배열의 첫번째 원소는 몫, 두번째 원소는 나머지에 해당한다.
 * 나눗셈결과의 나머지는 항상 양수 값을 가진다.
 
+### 3.1 덧셈
+```BigInt```객체의 덧셈 함수는 두 BigInt객체의 값을 더하는 기능을 수행하며, 다음과 같이 선언되어 있다.
+
+```javascript
+// add
+// @param (BigInt) x
+// @return (BigInt) sum value;
+scope.BigInt.prototype.add = function(x) {
+	/* Function implementations .... */
+};
+```
+
+#### 3.1.1 사용 예
+덧셈 함수의 사용법은 다음과 같다.
+
+```javascript
+var A = new BigInt("567");
+var B = new BigInt("98765");
+var result = A.add(B);
+
+console.log(A.toString() + " + " + B.toString() + " = " + result.toString());
+```
+
+```
+567 + 98765 = 99332
+```
+
+#### 3.1.2 덧셈 함수의 구성
+BigInt의 덧셈을 수행하는 함수인 add는 내부적으로 같은 부호를 가진 수의 덧셈만을 취급하며, 다음의 네 파트로 구성되어 있다.
+
+##### 1. 덧셈을 수행할 두 수의 부호 체크
+두 수의 부호가 서로 다른 경우, 입력받은 수(x) 의 부호를 바꿔 뺄셈 연산을 수행<br/>
+예1 : -6 + 3 =&gt; (-6) - (-3)<br/>
+예2 : 3 + (-2) =&gt; (3) - (+2)
+
+##### 2. 덧셈을 수행할 두 수의 절대값 체크
+절대 값이 큰 수에 절대값이 작은 수를 더하도록 덧셈 순서 조정<br/>
+예1 : 382 + 1001 =&gt; 1001 + 382<br/>
+예2 : (-382) + (-1001) =&gt; (-1001) + (-382)
+
+##### 3. 덧셈 수행
+부호가 같고, 절대값의 크개대로 덧셈의 순서가 조정된 두수의 덧셈을 수행.
+
+##### 4. 결과값의 부호결정 및 결과 반환
+덧셈 수행결과에 원래 수의 부호를 적용하여 반환한다.<br/>
+두 수의 부호가 다른 경우는 뺄셈연산의 결과를 반환하며, 두 수의 부호가 같은경우 덧셈연산시 부호가 바뀌지 않으므로 연산대상인 두 수 중 어느 수의 부호를 따라도 무관하다.
+
+#### 3.1.3 덧셈 알고리즘 설명
+두수의 덧셈연산시 실제로 수의 절대값이 저장된 _arrBigInt배열의 덧셈만을 수행하며, 부호는 결과값 출력시 할당한다.<br/>
+_arrBigInt배열의 덧셈 연산은 다음과 같이 수기로 덧셈을 하는 과정을 자바스크립트 코드로 모사했다.
+
+아래 예와 같이 두 수의 각 자리를 모두 도한 다음에도 올림수가 남을 경우,<br/>
+연산이 끝난 다음에 올림수 1을 수의 앞에 추가해 준다
+
+```
+   1 2 3                1 2 3               1 2 3              1 2 3
++  9 6 7             +  9 6 7            +  9 6 7           +  9 6 7
+---------            ---------          ---------          ---------
+     (3+7)    ==>   (2+6+1) 0     ==>   (1+9) 9 0     =>     1 0 9 0
+```
+
+```javascript
+//calculate sum and overflow of each digits.
+var result = new BigInt(base._sign);
+result._arrBigInt = []; overflow = 0;
+for(var n = 0 ; n < base._arrBigInt.length ; n++) {
+    sum = parseInt(base._arrBigInt[n]) + overflow;
+    if(n < addee._arrBigInt.length) sum += parseInt(addee._arrBigInt[n]);
+
+    overflow = parseInt(sum/10);
+    sum = sum%10;
+
+    result._arrBigInt.push(""+sum);
+}
+
+//if overflow remains, add magnificient value of result
+if(overflow > 0) result._arrBigInt.push(""+overflow);
+```
+
 
