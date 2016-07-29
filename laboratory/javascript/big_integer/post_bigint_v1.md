@@ -201,4 +201,83 @@ for(var n = 0 ; n < base._arrBigInt.length ; n++) {
 if(overflow > 0) result._arrBigInt.push(""+overflow);
 ```
 
+### 3.2 뺄셈
+```BigInt```객체의 덧셈 함수는 두 BigInt객체의 값을 빼는 기능을 수행하며, 다음과 같이 선언되어 있다.
 
+```javascript
+// sub
+// @param (BigInt) x
+// @return (BigInt) substract value;
+scope.BigInt.prototype.sub = function(x) {
+	/* Function implementations .... */
+};
+```
+
+#### 3.2.1 사용 예
+뺄셈 함수의 사용법은 다음과 같다.
+
+```javascript
+var A = new BigInt("567");
+var B = new BigInt("98765");
+var result = A.sub(B);
+
+console.log(A.toString() + " + " + B.toString() + " = " + result.toString());
+```
+
+```
+567 - 98765 = -98198
+```
+
+#### 3.2.2 뺄셈 함수의 구성
+BigInt의 덧셈을 수행하는 함수인 add는 내부적으로 같은 부호를 가진 수의 뺄셈만을 취급하며, 부호가 다른 두 수의 뺄셈연산은 두번째 인수의 부호를 바꾸어 덧셈 연산으로 처리한다.<br/>
+뺄셈 연산은 다음의 네 파트로 구성되어 있다.
+
+##### 1. 뺄셈을 수행할 두 수의 부호 체크
+두 수의 부호가 서로 다른 경우, 입력받은 수(x) 의 부호를 바꿔 덧셈 연산을 수행<br/>
+예1 : -6 - 3 =&gt; (-6) + (-3)<br/>
+예2 : 3 - (-2) =&gt; (3) + (+2)
+
+##### 2. 뺄셈을 수행할 두 수의 절대값 체크 및 결과 값 부호 결정
+절대 값이 큰 수에 절대값이 작은 수를 더하도록 덧셈 순서 조정<br/>
+결과 값의 부호는 절대값이 큰 수의 부호와 같다.<br/>
+예 : 382 - 1001 =&gt; 1001 - 382<br/>
+
+##### 3. 뺄셈 수행
+부호가 같고, 절대값의 크개대로 뺄셈의 순서가 조정된 두수의 뺄셈을 수행.
+
+##### 4. 결과값의 불필요한 0 삭제 및 결과 반환
+뺄셈 후 불필요한 0이 결과값에 포함된 경우 0 삭제.
+예 : 9548 - 9533 = 0015  =&gt; 15
+
+#### 3.2.3 뺄셈 알고리즘 설명
+두 수의 부호가 같고 절대값이 큰 수에서 정대값이 작은 수를 빼는 연산을 수행하므로, 부호의 영향을 제외하면 큰 양의정수에서 작은 양의정수를 빼는 연산과 동일하다.<br/>
+따라서 뺄셈 연산 또한 수기로 뺄셈을 하는 과정을 모사하여 _arrBigInt배열의 뺄셈 연산을 구현했다.
+
+뺄셈의 시작은 작은 수에서 부터 시작하여 큰 자리의 수로 진행하며, 뺄 값이 부족한 경우 상위 자리의 값을 1 빼고 해당 자리의 뺄 값에 10을 더하는 방식을 사용한다.<br/>
+특정 자리에서 상위의 수를 임차한 경우 상위값에 바로 1을 삭제하지 않고, 상위 값 연산시 하위값에서 사용한 값의 유무를 확인하여 연산결과에 적용하였다.
+
+```
+   8 2 3                8 2 3               8 2 3              8 2 3
+-  3 6 7             +  3 6 7            +  3 6 7           +  3 6 7
+---------            ---------          ---------          ---------
+  (3-7+10)  ==>  (2-6-1+10) 6   ==>   (8-3-1) 5 6     =>       4 5 6
+   u = -1            u = -1             u = 0
+
+* u : underflow
+```
+
+```javascript
+//calculate substract and underlfow
+result._arrBigInt = []; underflow = 0;
+for(var n = 0 ; n < base._arrBigInt.length ; n++) {
+    sub = parseInt(base._arrBigInt[n]) + underflow;
+    if(n < subee._arrBigInt.length) sub -= parseInt(subee._arrBigInt[n]);
+    if(sub < 0){
+        underflow = -1;
+        sub += 10;
+    } else {
+        underflow = 0;
+    }
+    result._arrBigInt.push(""+sub);
+}
+```
