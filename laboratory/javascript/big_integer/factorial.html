@@ -12,8 +12,14 @@
 			var result = document.getElementById("result");
 			
 			var strFact100 = facrotials(100);
+			var strFact200 = facrotials(200);
 
-			result.innerText = strFact100;
+			var resultStr = "100! (length : "+strFact100.length+") \n";
+			resultStr += strFact100 + "\n\n";
+			resultStr += "200! (length : "+strFact200.length+") \n";
+			resultStr += strFact200 + "\n\n";
+
+			result.innerText = resultStr;
 		}
 	</script>
 </BODY>
