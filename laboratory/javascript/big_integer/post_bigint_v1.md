@@ -35,10 +35,14 @@ Max Number : 1.7976931348623157e+308
 
 ```
 100! (length : 158)
-93326215443944152681699238856266700490715968264381621468592963895217599993229915608941463976156518286253697920827223758251185210916864000000000000000000000000
+9332621544394415268169923885626670049071596826438162146859296389521759999322991560894146397615651828625
+3697920827223758251185210916864000000000000000000000000
 
 200! (length : 375)
-788657867364790503552363213932185062295135977687173263294742533244359449963403342920304284011984623904177212138919638830257642790242637105061926624952829931113462857270763317237396988943922445621451664240254033291864131227428294853277524242407573903240321257405579568660226031904170324062351700858796178922222789623703897374720000000000000000000000000000000000000000000000000
+7886578673647905035523632139321850622951359776871732632947425332443594499634033429203042840119846239041
+7721213891963883025764279024263710506192662495282993111346285727076331723739698894392244562145166424025
+4033291864131227428294853277524242407573903240321257405579568660226031904170324062351700858796178922222
+789623703897374720000000000000000000000000000000000000000000000000
 ```
 
 
@@ -393,5 +397,117 @@ for(var n = 0 ; n < multiplier._arrBigInt.length ; n++) {
     var lineValue = new BigInt(result._sign);
     lineValue._arrBigInt = lineArr;
     result = result.add(lineValue);
+}
+```
+
+### 3.4 나눗셈
+```BigInt```객체의 divide 함수는 인수로 받은 BigInt객체로 그 대상이 되는 객체의 값을 나눈 결과랄 구하는 기능을 수행하며, 다음과 같이 선언되어 있다.
+
+```javascript
+// divide
+// @param (BigInt) x
+// @return (Array[BigInt,BigInt]) quotient, renains;
+scope.BigInt.prototype.divide = function(x) {
+	/* Function implementations .... */
+};
+```
+
+#### 3.4.1 사용 예
+나눗셈 함수는 그 결과로 몱과 나머지를 담은 배열을 반환하며 사용법은 다음과 같다.
+
+```javascript
+var A = new BigInt("567");
+var B = new BigInt("98765");
+var result = B.divide(A);
+
+console.log(B.toString() + " / " + A.toString() + " = " + result[0].toString()+" remains "+result[1].toString());
+```
+
+```
+98765 / 567 = 174 remains 107
+```
+
+#### 3.4.2 나눗셈 함수의 구성
+BigInt의 곱셈을 수행하는 함수인 multiply 다음의 세 파트로 구성되어 있다.
+
+##### 1. 0으로 나누는 예외 체크
+0으로 나눗셈을 시도 할 경우 DivideByZeroException 예외를 발생시키고 연산을 중지한다.
+
+##### 2. 제수와 피제수의 크기 비교
+제수와 피제수 크기비교를 통해 몱이 0또는 1이 나오는 경우의 연산과정을 단순화 한다.
+* 제수의 절대값이 피제수보다 클 경우 몫은 0, 나머지는 피제수 전체가 되도록 한다.<br/>
+* 제수와 피제수의 값이 동일 할 경우 몫은 1, 나머지는 0을 반환한다.
+
+##### 3. 나눗셈 연산 수행
+실제 나눗셈 연산을 수행한다. 나눗셈 연산의 수행과정은 아래 알고리즘 항목에서 자세히 설명한다.
+
+##### 4. 몫과 나머지의 불푤이효나 0 삭제 및 값 출력
+나눗셈 결과값의 가장 큰수 자리에는 0이 아닌 수가 오도록 앞에 딸려오는 0을 삭제한다.
+
+#### 3.4.3 나눗셈 알고리즘 설명
+```BigInt```객체의 나눗셈 연산 또한 수기로 두 수의 곱을 계산하는 과정을 모사했다.<br/>
+나눗셈 연산은 다음의 과정을 반복하여 값을 구한다.
+1. 먼저 나눗셈의 대상이 되는 수(피제수) 에서 나눌 수(제수)의 자리수 만큼의 단위로 값을 잘라온다. <br/>잘라온 값이 제수보다 작을 경우 다음 자리의 값을 잘라와서 뒤에 추가한다.
+2. 제수에 1부터 9까지 차례로 곱해서, 곱한 값이 잘라온 값보다 커지는 순간의 곱한 수를 찾는다.
+3. 2번단계에서 찾은 값에 1을 뺀 값을 몫 결과값 배열에 추가한다.
+4. 이전 2번 단계에서 찾은 값에 1을 빼서 제수에 곱한 다음, 피제수에서 잘라온 값에서 빼준다.
+5. 4번 단계에서 뺄셈 결과로 나온 값에 피제수의 다음 자리 값을 뒤에 추가하여, 피제수의 가장 마지막 자리수를 계산 할 때 까지 2번과정으로 돌아가 연산을 계속한다.
+
+```
+예 : 37456 ÷ 25 = 1498 ... 6
+
+        1                     1                     1 4                     1 4 9 8
+    +----------   ==>     +----------   ==>     +----------  ==...=>    +----------
+ 25 | 3 7 4 5 6        25 | 3 7 4 5 6        25 | 3 7 4 5 6          25 | 3 7 4 5 6
+      2 5                   2 5                   2 5                     2 5
+     ----------            ----------            ----------              ----------
+      1 2                   1 2 4                 1 2 4                   1 2 4
+                                                  1 0 0                   1 0 0
+                                                 ----------               ----------
+                                                    2 4                     2 4 5
+                                                                            2 2 5
+                                                                          ----------
+                                                                              2 0 6
+                                                                              2 0 0
+                                                                          ----------
+                                                                                  6
+
+```
+
+```javascript
+ar tmpQuotient;
+var tmpDividend = new BigInt(0); tmpDividend._arrBigInt = [];
+var quotient = new BigInt(0), dividend = this.clone();
+for(var offset = this._arrBigInt.length - x._arrBigInt.length ; offset >= 0 ; offset--) {
+    tmpDividend._arrBigInt = dividend._arrBigInt.splice(offset).concat(tmpDividend._arrBigInt);
+
+    //remove zero headings for dividend
+    removeZeroHeadings(tmpDividend)
+
+    var tmpCompare = tmpDividend.absCompare(x);
+    if(tmpCompare < 0) {
+        tmpQuotient = 0;
+    } else if( tmpCompare == 0 ) {
+        tmpQuotient = 1;
+        tmpDividend = new BigInt(0);
+    } else {
+        tmpQuotient = 1;
+        while(tmpQuotient < 10) {
+            var lineCheck = x.multiply(new BigInt(tmpQuotient+1)).compare(tmpDividend);
+            if(lineCheck > 0) {
+                tmpDividend = tmpDividend.sub(x.multiply(new BigInt(tmpQuotient)));
+                break;
+            } else if(lineCheck == 0) {
+                tmpQuotient++;
+                tmpDividend = new BigInt(0);
+                break;
+            }
+            tmpQuotient++;
+        }
+    }
+
+    //removeZeroHeadings(quotient);
+    quotient._arrBigInt.unshift(""+tmpQuotient);
+    removeZeroHeadings(quotient);
 }
 ```
