@@ -343,14 +343,55 @@ BigInt의 곱셈을 수행하는 함수인 multiply 다음의 세 파트로 구�
 
 ####3.3.3 곱셈 알고리즘 설명
 ```BigInt```객체의 곱셈 연산 또한 수기로 두 수의 곱을 계산하는 과정을 모사했다.<br/>
-곱셈을 계산하는 방법에는 여러가지 과정이 있으나, 여기에서는 곱셈을 수행할 수를 각각의 자리별로 구분하여 곱셈의 대상이 되는 수화 곱하고, 각각의 결과를 더해서 최종 결과를 도출한다.
+곱셈을 계산하는 방법에는 여러가지 과정이 있으나, 여기에서는 곱셈을 수행할 수를 각각의 자리별로 구분하여 곱셈의 대상이 되는 수와 곱하고, 각각의 결과를 더해서 최종 결과를 도출한다.
 
 ```
-   3 2 6             3 2 6             3 2 6             3 2 6             3 2 6             3 2 6             3 2 6
- x   5 8           x   5 8           x   5 8           x   5 8           x   5 8           x   5 8           x   5 8
---------   ==>    --------    ==>   --------    ==>   --------    ==>   --------  =...=>  --------    ==>   --------
-    (6*8)       (4+ 2*8) 8      (2+ 3*8) 0 8           2 6 0 8           2 6 0 8           2 6 0 8           2 6 0 8
- ov = 4          ov = 2            ov= 2                                  (6*5)          1 6 3 0        +  1 6 3 0 0
-                                                                        ov = 3                          ------------
-* ov : overflow                                                                                            1 8 9 0 8
+   3 2 6             3 2 6             3 2 6             3 2 6
+ x   5 8           x   5 8           x   5 8           x   5 8
+--------   ==>    --------    ==>   --------    ==>   --------
+    (6*8)       (4+ 2*8) 8      (2+ 3*8) 0 8           2 6 0 8
+ ov = 4          ov = 2            ov= 2
+
+              3 2 6             3 2 6             3 2 6
+            x   5 8           x   5 8           x   5 8
+     ==>   --------  =...=>  --------    ==>   --------
+            2 6 0 8           2 6 0 8           2 6 0 8
+             (6*5)          1 6 3 0        +  1 6 3 0 0
+           ov = 3                          ------------
+                                              1 8 9 0 8
+
+* ov : overflow
+```
+
+```javascript
+for(var n = 0 ; n < multiplier._arrBigInt.length ; n++) {
+    var multiplyValue = parseInt(multiplier._arrBigInt[n]);
+
+    if(multiplyValue == 0) {
+        // someone * 0 = 0
+        continue;
+    } else if(multiplyValue == 1) {
+        // someone * 1 = someone
+        lineArr = base._arrBigInt.slice(0);
+    } else {
+        // multiply base by each digit of multiplier
+        overflow = 0; temp = 0; lineArr = [];
+        for(var d = 0 ; d < base._arrBigInt.length ; d++) {
+            temp = (parseInt(base._arrBigInt[d]) * multiplyValue) + overflow;
+            overflow = parseInt(temp/10);
+            lineArr.push(""+temp%10);
+        }
+        if(overflow > 0) lineArr.push(""+overflow);
+    }
+
+    // 0 padding for shifting digits
+    for(var digit = 0 ; digit < n ; digit++) {
+        lineArr.unshift("0");
+    }
+
+    // sum multiply value
+    var lineValue = new BigInt(result._sign);
+    lineValue._arrBigInt = lineArr;
+    result = result.add(lineValue);
+}
 ```
