@@ -516,6 +516,7 @@ for(var offset = this._arrBigInt.length - x._arrBigInt.length ; offset >= 0 ; of
 ## 4. 소수(Prime Number) 계산
 큰 수와 사칙연산을 정의했으니 이를 이용하여 큰 소수를 구하는 알고리즘을 고민 해 보자.
 
+### 4.1 기본 자료형을 이용한 소수 찾기
 기본 자료형과 내장 라이브러리 함수를 100000 까지의 소수를 수하는 자바스크립트 코드는 다음과 같이 구현 할 수 있을 것이다.
 ```javascript
 var MAX_VALUE = 100000;
@@ -560,4 +561,94 @@ Total count : 9592
 99643,99661,99667,99679,99689,99707,99709,99713,99719,99721,99733,99761,99767,99787,99793,
 99809,99817,99823,99829,99833,99839,99859,99871,99877,99881,99901,99907,99923,99929,99961,
 99971,99989,99991]
+```
+
+### 4.2 BigInt를 이용한 소수 찾기
+BigInt를 이용하여, 주어진 수 이하의 소수를 구하는 함수는 다음과 같이 작성 할 수 있다.
+
+```javascript
+function findPrimeNumber(_finish){
+	var START = new BigInt(2), FINISH = new BigInt(_finish);
+
+	var primeNumberList = [];
+	var result;
+
+	for(var n = START ; n.compare(FINISH) < 0 ; n = n.add(new BigInt(1))){
+		var isPrime = true;
+		var searchEnd = n.sqrt();
+		for(var i = 0 ; i < primeNumberList.length ; i++) {
+			if(primeNumberList[i].compare(searchEnd) > 0) break;
+
+			var remain = n.divide(primeNumberList[i])[1];
+			if(remain.compare(new BigInt(0)) == 0) {
+				isPrime = false;
+				break;
+			}
+		}
+
+		if(isPrime) {
+			primeNumberList.push(n);
+		}
+	}
+
+	return primeNumberList;
+};
+```
+
+BigInt객체를 이용하여 소수를 구할 때에도, 기본자료형을 이용하여 소수를 구할 때와 마찬가지로 주어진 수의 제곱근보다 작은 소수로 나눗셈을 수행하여 나머지가 0인 경우가 없을 경우 해당 수를 소수로 판정한다.
+
+그런데 이 나눗셈의 반복을 줄이기 위한 한계인 주어진수의 제곱근을 구하는 것이 문제가 된다.<br/>
+여기에서는 다음과 같이 BigInt의 내장함수로 제곱근을 근사 하는 기능을 추가했다.
+
+* 1.0+E10 미만의 수는, 해당 수를 기본 자료형인 number타입으로 변환하여 Math.sqrt 함수를 이용하여 제곱근을 구한다음 소숫점 아랫수를 올림하여 정수를 반환한다.
+* 1.0+E10 이상의 수는, 해당 수의 큰 자릿수부터 세서 10개 이하의 수가 남도록 작은 자리의 수부터 두자리씩 잘라낸다.
+    남은 수를 Math.sqrt를 이용하여 로 제곱근을 구하고 소숫점 아래의 값을 올림한 다음 자른 자리의 절반 만큼 10을 곱해준다.
+
+```
+A = a.bcdefghijklmnop * 10^(X+2Y) , 이 때 0 <= a...p <= 9 이고, X < 10, Y => 0 인 정수
+Sqrt(A) = Sqrt( (a + 0.bcdefghijk + 0.0000000000lmnop) * 10^(X) * 10^(2Y) )
+        = Sqrt( (a + 0.bcdefghijk + 0.0000000000lmnop) * 10^(X) ) * 10^(Y)
+
+이 때,
+0.0000000000lmnop < 0.0000000001 이고,
+(a + 0.bcdefghijk + 0.0000000001) * 10^(X) < 10^10 이다.
+
+따라서,
+Sqrt(A) < [(a + 0.bcdefghijk + 0.0000000001) * 10^(X) +0.5] + * 10^(Y)
+
+이고, (a + 0.bcdefghijk + 0.0000000001) * 10^(X)의 값은 Math.sqrt 함수로 계산 할 수 있다.
+```
+
+이를 자바스크립트 코드로 구현하면 아래와 같다.
+
+```javascript
+// Find square root in approximately 10 digits
+// @param (void)
+// @return (BigInt) square root of this
+scope.BigInt.prototype.sqrt = function() {
+    if(this._sign < 0) return undefined;
+    else if(this.compare(new BigInt(100)) < 0) return new BigInt(Math.ceil(Math.sqrt(this.toString())));
+    else {
+        var _n = parseInt( (this._arrBigInt.length+1) / 2 ) - 1;
+        var _2n = _n*2;
+        var _x = (this._arrBigInt.slice(_2n).reverse().join(''))+"."+(this._arrBigInt.slice((_2n>10)?(_2n-10):0,_2n).reverse().join(''));
+
+        var sqrtX = Math.sqrt(parseFloat(_x)).toString().split('.');
+        var result = [sqrtX[0]];
+        var expTerm = (sqrtX[1])?sqrtX[1].split(''):'';
+        for(var inx = 0 ; inx < _n ; inx++){
+            if(inx < expTerm.length) {
+                if(inx==(expTerm.length-1)){
+                    result.push(parseInt(expTerm[inx])+1);
+                } else {
+                    result.push(expTerm[inx]);
+                }
+            } else {
+                result.push("0");
+            }
+        }
+
+        return new BigInt(result.join(''));
+    }
+}
 ```

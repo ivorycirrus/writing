@@ -10,20 +10,34 @@
 	<script>
 		function runExample(){
 			var result = document.getElementById("result");
-			
-			var maxNum = new BigInt(100000);
+
+			var MAX_VALUE = new BigInt(100000);
 			var startAt = Date.now();
 			
-			var primeList = findPrimeNumber(maxNum);
+			//find prime numbers
+			var primeList = findPrimeNumber(MAX_VALUE);
+
 			var runningTime = (Date.now() - startAt)/1000; 
 
-			var resStr = "Calculate prime number under "+maxNum.toString()+"\ntime spent : "+runningTime+" sec\n";
+			console.log("Prime Numbers in "+MAX_VALUE.toString());
+			console.log("Time spent : "+runningTime);
+			console.log("Total count : "+primeList.length);
+
+			var strPrime = [];
+			for(p in primeList) strPrime.push(p.toString());
+			console.log(JSON.stringify(strPrime));
+
+
+			/*
+			// display in HTML document
+			var resStr = "Calculate prime number under "+MAX_VALUE.toString()+"\ntime spent : "+runningTime+" sec\n";
 			for(var inx = 0 ; inx < primeList.length ; inx++) {
-				if(inx%5 == 0) resStr += '\n';
+				if(inx%10 == 0) resStr += '\n';
 				resStr += primeList[inx].toString() + ' , ';
 			}
 
 			result.innerText = resStr;
+			*/
 		}
 	</script>
 </BODY>
