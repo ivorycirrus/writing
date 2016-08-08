@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<HTML>
+<BODY onload="runExample()">
+	<H2>Example</H2>
+	<SCRIPT src="bigint_v1.js"></SCRIPT>
+	<SCRIPT src="prime.js"></SCRIPT>
+
+	<div id="result"></div>
+
+	<script>
+		function runExample(){
+			var result = document.getElementById("result");
+
+			var MAX_VALUE = new BigInt(100000);
+			var startAt = Date.now();
+			
+			//find prime numbers
+			var primeList = findPrimeNumber(MAX_VALUE);
+
+			var runningTime = (Date.now() - startAt)/1000; 
+
+			console.log("Prime Numbers in "+MAX_VALUE.toString());
+			console.log("Time spent : "+runningTime);
+			console.log("Total count : "+primeList.length);
+
+			var value = [];
+			for(var inx = 0 ; inx < primeList.length ; inx++) value.push(parseInt(primeList[inx].toString()));
+			console.log(value);
+
+
+			/*
+			// display in HTML document
+			var resStr = "Calculate prime number under "+MAX_VALUE.toString()+"\ntime spent : "+runningTime+" sec\n";
+			for(var inx = 0 ; inx < primeList.length ; inx++) {
+				if(inx%10 == 0) resStr += '\n';
+				resStr += primeList[inx].toString() + ' , ';
+			}
+
+			result.innerText = resStr;
+			*/
+		}
+	</script>
+</BODY>
+</HTML>

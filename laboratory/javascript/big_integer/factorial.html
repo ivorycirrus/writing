@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<HTML>
+<BODY onload="runExample()">
+	<H2>Example</H2>
+	<SCRIPT src="bigint_v1.js"></SCRIPT>
+	<SCRIPT src="factorial.js"></SCRIPT>
+
+	<div id="result"></div>
+
+	<script>
+		function runExample(){
+			var result = document.getElementById("result");
+			
+			var strFact100 = facrotials(100);
+			var strFact200 = facrotials(200);
+
+			var resultStr = "100! (length : "+strFact100.length+") \n";
+			resultStr += strFact100 + "\n\n";
+			resultStr += "200! (length : "+strFact200.length+") \n";
+			resultStr += strFact200 + "\n\n";
+
+			result.innerText = resultStr;
+		}
+	</script>
+</BODY>
+</HTML>
