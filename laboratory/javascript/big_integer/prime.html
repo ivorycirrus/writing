@@ -23,9 +23,9 @@
 			console.log("Time spent : "+runningTime);
 			console.log("Total count : "+primeList.length);
 
-			var strPrime = [];
-			for(p in primeList) strPrime.push(p.toString());
-			console.log(JSON.stringify(strPrime));
+			var value = [];
+			for(var inx = 0 ; inx < primeList.length ; inx++) value.push(parseInt(primeList[inx].toString()));
+			console.log(value);
 
 
 			/*

@@ -8,7 +8,7 @@ function findPrimeNumber(_finish){
 		var isPrime = true;
 		var searchEnd = n.sqrt();
 		for(var i = 0 ; i < primeNumberList.length ; i++) {
-			if(primeNumberList[i].compare(searchEnd) > 0) break;
+			if(searchEnd.compare(primeNumberList[i]) < 0) break;
 			
 			var remain = n.divide(primeNumberList[i])[1];
 			if(remain.compare(new BigInt(0)) == 0) {

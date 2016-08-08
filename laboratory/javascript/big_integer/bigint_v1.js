@@ -302,7 +302,7 @@
 			var _2n = _n*2;
 			var _x = (this._arrBigInt.slice(_2n).reverse().join(''))+"."+(this._arrBigInt.slice((_2n>10)?(_2n-10):0,_2n).reverse().join(''));
 
-			var sqrtX = Math.sqrt(parseFloat(_x)).toString().split('.');
+			var sqrtX = (Math.sqrt(parseFloat(_x))+1).toString().split('.');
 			var result = [sqrtX[0]];
 			var expTerm = (sqrtX[1])?sqrtX[1].split(''):'';
 			for(var inx = 0 ; inx < _n ; inx++){
@@ -319,7 +319,7 @@
 
 			return new BigInt(result.join(''));
 		}
-	}
+	};
 
 	// remove zero headings for BigInt
 	/*private*/ function removeZeroHeadings(bi) {
