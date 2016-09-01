@@ -15,7 +15,7 @@
 자바스크립트의 내장함수 중에는(ES5 기준으로) 배열의 복사를 위한 함수가 존재하지는 않는다. 하지만, 일부 내장함수의 경우 출력되는 결과 값을 입력 파라메터와 다른 위치의 메모리에 값을 할당하여 반환하는 명령이 존재한다. 따라서 이러한 내장함수의 동작을 배열의 복제에 이용 할 수 있을 것이다.
 
 ### 2.1 Array.slice
-Array객체의 prototype 함수인 slice는 본래 원본배열에서 원하는 갯수 만큼 원소를 잘라내는 기능을 제공한다. 그런데 원본 배열을 잘라 낼 위치를 배열의 시작지점으로 주면, 원본배열의 시작부터 끝까지를 잘라낸 값이라 판단하여 별도의 메모리 영역에 배열의 모든 값을 복제한 다음 이렇게 복제한 배열을 반환하게 된다. 이는 우리가 구현하고자 하는 배열의 깊은 복제에 해당하며, 많은 라이브러리에서 배열의 복제를 위해 이 방법을 이용하고 있다. 
+Array객체의 prototype 함수인 slice는 본래 원본배열에서 원하는 갯수 만큼 원소를 잘라내는 기능을 제공한다. 그런데 원본 배열을 잘라 낼 위치를 배열의 시작지점으로 주면, 원본배열의 시작부터 끝까지를 잘라낸 값이라 판단하여 별도의 메모리 영역에 배열의 모든 값을 복제한 다음 이렇게 복제한 배열을 반환하게 된다. 이는 우리가 구현하고자 하는 배열의 깊은 복제에 해당하며, 많은 라이브러리에서 배열의 복제를 위해 이 방법을 이용하고 있다.
 
 slice함수를 이용한 배열의 복제는 다음과 같이 파라메터를 주지 않거나, 0을 파라메터로 하여 함수를 호출하면 된다.
 ```javascript
@@ -42,37 +42,26 @@ var clone = JSON.parse( JSON.stringify(origin) );
 ```
 
 ### 2.4 내장함수를 이용한 객체복사 성능 비교
-<div id="barchart_material" style="width: 100%; height: 400px;"></div>
+앞서 소개한 자바스크립트의 내장함수를 이용한 방법으로 배열을 복사할 때의 성능을 비교 해 보았다. 복사할 원본 배열은 크기는 1,000,000개의 정수가 저장되어 있는 배열이며, 각각의 방법마다 10회씩 복사를 수행하여 평균적으로 소요되는 시간을 구했다.
+
+```
+copySlice : 4.2ms
+copySliceZero : 6.4ms
+copyConcat : 4.9ms
+copyJSON : 52.8ms
+```
+
+테스트 결과 JSON 문자열로 변환한 후 다시 객체로 파싱하는 방법이 가장 성능이 떨어졌으며, 파라메터 없이 slice 함수 호출로 객체를 복사하는 방법이 가장 빠르게 동작함을 볼 수 있다.
 
 ## 3. 배열을 순회와 배열 값 삽입
+배열을 순회하면서 값을 삽입하는 방법은 공통적으로 빈 배열 객체를 생성하고, 이 배열 객체의 각각의 위치에 원본 배열의 값을 일일히 대입하는 과정을 거친다.
+
+이 때, 동작 속도에 영향을 줄 수 있는 부분은 배열의 선언방법, 반복문을 이용한 배열의 순회방법, 배열에 값을 추가하는 방법을 들 수 있다.
+
+### 3.1 배열의 생성 방법
+자바스크립트의 배열 생성방법은, Array 객체를 이용한 배열의 생성과 리터럴(Literal) 방식으로 배열을 선언하는 방법을 들 수 있다.
+
+Array객체를 이용하는 방법은 new 키워드를 이용하여 Array객체를 명시적으로 생성하는 방법이며, 이 때 생성자의 파라메터로 배열의 크기를 지정 할 수 있다. 리터럴 방식을 이용한 배열의 선언은 배열의 선언과 동시에 값을 바로 할당 할 수 있도록 배열의 원소를 포함하는 값의 목록을 ```[]```으로 감싸서 표현하는 방식이다. 일반적으로 배열의 생성은 리터럴 방식이 많이 사용되나
 
 
 ## 4. 결론
-
-
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script type="text/javascript">
-  google.charts.load('current', {'packages':['bar']});
-  google.charts.setOnLoadCallback(drawChart);
-  function drawChart() {
-    var data = google.visualization.arrayToDataTable([
-      ['Year', 'Sales', 'Expenses', 'Profit'],
-      ['2014', 1000, 400, 200],
-      ['2015', 1170, 460, 250],
-      ['2016', 660, 1120, 300],
-      ['2017', 1030, 540, 350]
-    ]);
-
-    var options = {
-      chart: {
-        title: 'Company Performance',
-        subtitle: 'Sales, Expenses, and Profit: 2014-2017',
-      },
-      bars: 'horizontal' // Required for Material Bar Charts.
-    };
-
-    var chart = new google.charts.Bar(document.getElementById('barchart_material'));
-
-    chart.draw(data, options);
-  }
-</script>
