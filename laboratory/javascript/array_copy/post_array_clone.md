@@ -59,9 +59,59 @@ copyJSON : 52.8ms
 이 때, 동작 속도에 영향을 줄 수 있는 부분은 배열의 선언방법, 반복문을 이용한 배열의 순회방법, 배열에 값을 추가하는 방법을 들 수 있다.
 
 ### 3.1 배열의 생성 방법
-자바스크립트의 배열 생성방법은, Array 객체를 이용한 배열의 생성과 리터럴(Literal) 방식으로 배열을 선언하는 방법을 들 수 있다.
+자바스크립트의 배열 생성방법은, Array 객체의 생성자를 명시적으로 호출하는 방법과 리터럴(Literal) 방식으로 배열을 선언하는 방법을 들 수 있다.
 
-Array객체를 이용하는 방법은 new 키워드를 이용하여 Array객체를 명시적으로 생성하는 방법이며, 이 때 생성자의 파라메터로 배열의 크기를 지정 할 수 있다. 리터럴 방식을 이용한 배열의 선언은 배열의 선언과 동시에 값을 바로 할당 할 수 있도록 배열의 원소를 포함하는 값의 목록을 ```[]```으로 감싸서 표현하는 방식이다. 일반적으로 배열의 생성은 리터럴 방식이 많이 사용되나
+Array객체를 이용하는 방법은 new 키워드를 이용하여 Array객체의 생성자를 명시적으로 호출하는 방법이며, 이때 파라메터로 배열의 크기를 지정하거나 초기 배열의 원소를 입력 할 수 있다. 리터럴 방식을 이용한 배열의 선언은 배열의 선언과 동시에 값을 바로 할당 할 수 있도록 배열의 원소를 포함하는 값의 목록을 ```[]```으로 감싸서 표현하는 방식이다. 일반적으로 배열의 생성은 성능 및 객체의 프로토타입 활용측면에서 리터럴 방식을 사용하는것을 추천하며, 이와 관련된 이야기는[여기 링크의 글](http://stackoverflow.com/questions/885156/whats-wrong-with-var-x-new-array)을 참고 하도록 하자.
 
+```javascript
+// Using constructor of Array object
+var arr1 = new Array (3);
+var arr2 = new Array (1,2,3);
+
+// Using literal way
+var arr3 = [1,2,3];
+```
+
+위의 예와 같이 자바스크립트의 배열을 생성 할 수 있다. 이 때 arr1은 배열의 크기만을 가진 ```[undefined, undefined, undefined]```의 값을 가진 배열을 생성하며, arr2와 arr3는 파라메터로 주어진 값을 배열의 원소로 구성하여 ```[1,2,3]```의 값으로 초리과된 배열 객체를 생성하게 된다.
+
+### 3.2 반복문을 이용한 배열의 순회 방법
+반복문을 이용하여 배열의 모든 값을 순회하는 방법은 여러가지가 있지만, 여기에서는 다음 4가지 방법을 소개 하고자 한다.
+
+* for 구문과 배열의 인덱스를 이용한 순차 접근
+* while 구문과 배열의 인덱스를 이용한 순차 접근
+* for-in 구문을 이용한 인덱스 획득 및 원소 조회
+* Array 객체의 프로토타입 함수인 forEach 함수를 이용한 배열 순회
+
+위에 열거한 각각의 방법에 대해 ```[1,2,3,4]```의 값을 가진 배열의 모든 원소를 출력하는 예제는 다음과 같다.
+
+```javasceipt
+var arr = [1,2,3,4];
+
+// for 구문과 배열의 인덱스를 이용한 순차 접근
+var inx = 0;
+for(inx = 0 ; inx < arr.length ; inx++ ){
+    console.log(arr[inx]);
+}
+
+// while 구문과 배열의 인덱스를 이용한 순차 접근
+var inx = arr.length;
+while(inx--){
+    console.log(arr[inx]);
+}
+
+// for-in 구문을 이용한 인덱스 획득 및 원소 조회
+var inx = 0;
+for(inx in arr){
+    console.log(arr[inx]);
+}
+
+// Array 객체의 프로토타입 함수인 forEach 함수를 이용한 배열 순회
+arr.forEach(function(element, inx){
+    console.log(element);
+});
+```
 
 ## 4. 결론
+
+## 참고
+* The way to create Javascript arrays : http://stackoverflow.com/questions/885156/whats-wrong-with-var-x-new-array
