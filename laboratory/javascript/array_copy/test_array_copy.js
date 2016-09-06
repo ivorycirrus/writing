@@ -82,6 +82,83 @@ var Test = {};
 
 	//--------------------------------
 
+	scope.copyUnshiftForIndexCount = function(){
+		var _size = scope.sampleArray.length;
+		var _arr = [];
+		var _start = Date.now();
+
+		for(var inx = _size ; inx >= 0 ; inx--) _arr.unshift(scope.sampleArray[inx]);
+
+		var _end = Date.now();
+		return (_end-_start);
+	};
+
+	scope.copyUnshiftForIn = function(){
+		var _arr = [];
+		var _start = Date.now();
+
+		for(inx in scope.sampleArray) _arr.unshift(scope.sampleArray[inx]);
+		_arr.reverse();
+
+		var _end = Date.now();
+
+		return (_end-_start);
+	};
+
+	scope.copyUnshiftArrayForeach = function(){
+		var _arr = [];
+		var _start = Date.now();
+
+		scope.sampleArray.forEach(function(element){
+			_arr.unshift(element);
+		})
+		_arr.reverse();
+
+		var _end = Date.now();
+		return (_end-_start);
+	};
+
+	//--------------------------------
+
+	scope.copyUnshiftForIndexCountFixedInit = function(){
+		var _size = scope.sampleArray.length;
+		var _arr = new Array(_size);
+		var _start = Date.now();
+
+		for(var inx = _size ; inx >= 0 ; inx--) _arr.unshift(scope.sampleArray[inx]);
+
+		var _end = Date.now();
+		return (_end-_start);
+	};
+
+	scope.copyUnshiftForInFixedInit = function(){
+		var _size = scope.sampleArray.length;
+		var _arr = new Array(_size);
+		var _start = Date.now();
+
+		for(inx in scope.sampleArray) _arr.unshift(scope.sampleArray[inx]);
+		_arr.reverse();
+
+		var _end = Date.now();
+		return (_end-_start);
+	};
+
+	scope.copyUnshiftArrayForeachFixedInit = function(){
+		var _size = scope.sampleArray.length;
+		var _arr = new Array(_size);
+		var _start = Date.now();
+
+		scope.sampleArray.forEach(function(element){
+			_arr.unshift(element);
+		})
+		_arr.reverse();
+
+		var _end = Date.now();
+		return (_end-_start);
+	};
+
+	//--------------------------------
+
 	scope.copyIndexForIndexCount = function(){
 		var _size = scope.sampleArray.length;
 		var _arr = [];
@@ -159,7 +236,9 @@ var Test = {};
 		var inx = scope.sampleArray.length;
 		var _start = Date.now();
 
-		while(--inx) _arr[inx] = scope.sampleArray[inx];
+		while(inx--) {
+			_arr[inx] = scope.sampleArray[inx];
+		}
 
 		var _end = Date.now();
 		return (_end-_start);
@@ -171,7 +250,9 @@ var Test = {};
 		var inx = _size;
 		var _start = Date.now();
 
-		while(--inx) _arr[inx] = scope.sampleArray[inx];
+		while(inx--) {
+			_arr[inx] = scope.sampleArray[inx];
+		}
 
 		var _end = Date.now();
 		return (_end-_start);
@@ -230,15 +311,20 @@ function startTest(){
 		"copyPushForIndexCount" : 0,
 		"copyPushForIn" : 0,
 		"copyPushArrayForeach" : 0,
-
 		"copyPushForIndexCountFixedInit" : 0,
 		"copyPushForInFixedInit" : 0,
 		"copyPushArrayForeachFixedInit" : 0,
 
+		"copyUnshiftForIndexCount" : 0,
+		"copyUnshiftForIn" : 0,
+		"copyUnshiftArrayForeach" : 0,
+		"copyUnshiftForIndexCountFixedInit" : 0,
+		"copyUnshiftForInFixedInit" : 0,
+		"copyUnshiftArrayForeachFixedInit" : 0,
+
 		"copyIndexForIndexCount" : 0,
 		"copyIndexForIn" : 0,
 		"copyIndexArrayForeach" : 0,
-
 		"copyIndexForIndexCountFixedInit" : 0,
 		"copyIndexForInFixedInit" : 0,
 		"copyIndexArrayForeachFixedInit" : 0,

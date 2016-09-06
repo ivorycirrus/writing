@@ -84,7 +84,7 @@ var arr3 = [1,2,3];
 
 위에 열거한 각각의 방법에 대해 ```[1,2,3,4]```의 값을 가진 배열의 모든 원소를 출력하는 예제는 다음과 같다.
 
-```javasceipt
+```javascript
 var arr = [1,2,3,4];
 
 // for 구문과 배열의 인덱스를 이용한 순차 접근
@@ -111,7 +111,66 @@ arr.forEach(function(element, inx){
 });
 ```
 
+### 3.3 배열에 값을 추가하는 방법
+자바스크립트의 배열에 값을 추가하는 방법은 일반적으로 다음 3가지 방법이 사용 가능하다.
+
+* 배열의 인덱스로 배열의 원소에 접근하여 직접 값을 대입하는 방법
+* Array.push() 함수를 이용하여 배열의 뒤에 값을 추가하는 방법
+* Array.unshift() 함수를 이용하여 배열의 앞에 값을 추가하는 방법
+
+이 방법을 활용한 예제 코드는 아래와 같다.
+
+```javascript
+var arr = [];
+
+// set value for using array index
+arr[0] = 1;
+
+// add value at the last of array
+arr.push(2);
+
+// add value at the first of array
+arr.unshift(3);
+```
+
+### 3.4 배열의 순회를 이용한 배열 복사 속도 비교
+다음은 배열의 순회와 값 대입을 이용하여 배열을 복사하는 방법을 실험한 결과로, 반복문의 사용과 배열의 생성, 값의 할당에 대해 10만개의 원소를 가진 배열을 10번씩 복사하여 평균을 낸 결과이다.
+
+
+
+```
+테스트 결과
+========================================================
+Copying array - size : 1000000 / sampling count : 10
+--------------------------------------------------------
+copyPushForIndexCount : 19.4ms
+copyPushForIn : 433ms
+copyPushArrayForeach : 39.9ms
+copyPushForIndexCountFixedInit : 26.7ms
+copyPushForInFixedInit : 424.7ms
+copyPushArrayForeachFixedInit : 39.7ms
+copyIndexForIndexCount : 20.9ms
+copyIndexForIn : 493ms
+copyIndexArrayForeach : 35.2ms
+copyIndexForIndexCountFixedInit : 1.8ms
+copyIndexForInFixedInit : 441.4ms
+copyIndexArrayForeachFixedInit : 18.5ms
+copyIndexWhileIndexCount : 55.2ms
+copyIndexWhileIndexCountFixedInit : 1.7ms
+========================================================
+```
+
+```
+테스트 환경
+- H/W : MacBook Pro (Retina, 13-inch, Late 2013) , i5 , 8G ram
+- OS : OSX El Capitan 10.11.6
+- Tool : node.js v4.2.5
+```
+
+전체 테스트에 대한 코드는 [여기 Gist Link](https://gist.github.com/ivorycirrus/8831875b9331d938311f7682500c7002)를 참고하자.
+
 ## 4. 결론
 
 ## 참고
 * The way to create Javascript arrays : http://stackoverflow.com/questions/885156/whats-wrong-with-var-x-new-array
+* Test Code for copying javascript arrays : https://gist.github.com/ivorycirrus/8831875b9331d938311f7682500c7002
