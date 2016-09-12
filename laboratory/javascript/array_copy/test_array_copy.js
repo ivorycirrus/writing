@@ -87,7 +87,7 @@ var Test = {};
 		var _arr = [];
 		var _start = Date.now();
 
-		for(var inx = _size ; inx >= 0 ; inx--) _arr.unshift(scope.sampleArray[inx]);
+		for(var inx = _size-1 ; inx >= 0 ; inx--) _arr.unshift(scope.sampleArray[inx]);
 
 		var _end = Date.now();
 		return (_end-_start);
@@ -125,7 +125,7 @@ var Test = {};
 		var _arr = new Array(_size);
 		var _start = Date.now();
 
-		for(var inx = _size ; inx >= 0 ; inx--) _arr.unshift(scope.sampleArray[inx]);
+		for(var inx = _size-1 ; inx >= 0 ; inx--) _arr.unshift(scope.sampleArray[inx]);
 
 		var _end = Date.now();
 		return (_end-_start);

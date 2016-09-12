@@ -41,18 +41,6 @@ var origin = [1,2,3,4];
 var clone = JSON.parse( JSON.stringify(origin) );
 ```
 
-### 2.4 내장함수를 이용한 객체복사 성능 비교
-앞서 소개한 자바스크립트의 내장함수를 이용한 방법으로 배열을 복사할 때의 성능을 비교 해 보았다. 복사할 원본 배열은 크기는 1,000,000개의 정수가 저장되어 있는 배열이며, 각각의 방법마다 10회씩 복사를 수행하여 평균적으로 소요되는 시간을 구했다.
-
-```
-copySlice : 4.2ms
-copySliceZero : 6.4ms
-copyConcat : 4.9ms
-copyJSON : 52.8ms
-```
-
-테스트 결과 JSON 문자열로 변환한 후 다시 객체로 파싱하는 방법이 가장 성능이 떨어졌으며, 파라메터 없이 slice 함수 호출로 객체를 복사하는 방법이 가장 빠르게 동작함을 볼 수 있다.
-
 ## 3. 배열을 순회와 배열 값 삽입
 배열을 순회하면서 값을 삽입하는 방법은 공통적으로 빈 배열 객체를 생성하고, 이 배열 객체의 각각의 위치에 원본 배열의 값을 일일히 대입하는 과정을 거친다.
 
@@ -133,43 +121,102 @@ arr.push(2);
 arr.unshift(3);
 ```
 
-### 3.4 배열의 순회를 이용한 배열 복사 속도 비교
-다음은 배열의 순회와 값 대입을 이용하여 배열을 복사하는 방법을 실험한 결과로, 반복문의 사용과 배열의 생성, 값의 할당에 대해 10만개의 원소를 가진 배열을 10번씩 복사하여 평균을 낸 결과이다.
+### 4. 복사 속도 테스트
 
-
-
-```
-테스트 결과
-========================================================
-Copying array - size : 1000000 / sampling count : 10
---------------------------------------------------------
-copyPushForIndexCount : 19.4ms
-copyPushForIn : 433ms
-copyPushArrayForeach : 39.9ms
-copyPushForIndexCountFixedInit : 26.7ms
-copyPushForInFixedInit : 424.7ms
-copyPushArrayForeachFixedInit : 39.7ms
-copyIndexForIndexCount : 20.9ms
-copyIndexForIn : 493ms
-copyIndexArrayForeach : 35.2ms
-copyIndexForIndexCountFixedInit : 1.8ms
-copyIndexForInFixedInit : 441.4ms
-copyIndexArrayForeachFixedInit : 18.5ms
-copyIndexWhileIndexCount : 55.2ms
-copyIndexWhileIndexCountFixedInit : 1.7ms
-========================================================
-```
+### 4.1 배열복사 속도 테스트
+다음과 같이 배열을 복사하는 방법에 대한 속도 테스트를 진행했으며, 테스트에 사용된 시스템 환경은 다음과 같다.
 
 ```
-테스트 환경
+배열 복사 테스트 환경
 - H/W : MacBook Pro (Retina, 13-inch, Late 2013) , i5 , 8G ram
 - OS : OSX El Capitan 10.11.6
 - Tool : node.js v4.2.5
 ```
 
-전체 테스트에 대한 코드는 [여기 Gist Link](https://gist.github.com/ivorycirrus/8831875b9331d938311f7682500c7002)를 참고하자.
+테스트에 사용한 배열은 10만개의 숫자를 원소로 하는 배열 객체를 미리 선언해서 모든 테스트에 공통으로 사용했다. 이 배열을 앞서 소개한 각각의 방법으로 복사를 수행하여 소요된 시간을 측정하며, 이 때 각각의 방법에 대해 10번씩 복사를 수행하여 평균 낸 값을 화면에 출력하도록 했다.
 
-## 4. 결론
+배열의 원소를 순회하면서 값을 복사하는 방법은 그 구성상 배열의 생성 및 순회, 배열에 값을 추가하는 방법이 각각 독립적으로 결과에 영향을 줄 수 있으므로 각각의 경우를 조합하여 동작 성능을 측정하는 코드를 작성했다. 전체 테스트에 대한 코드는 [여기 Gist Link](https://gist.github.com/ivorycirrus/8831875b9331d938311f7682500c7002)를 참고하자.
+
+### 4.2 속도 테스트 결과
+아래는 앞서 소개한 모든 방법에 대해 테스트를 수행 한 결과이다.
+
+테스트 결과를 종합적으로 볼 때, 주목할 만한 결과를 정리하면 다음과 같다.
+
+* 원본배열과 같은 크기의 배열을 미리 생성 한 후 배열의 인덱스로 접근하여 값을 대입하는 방법이 빈 배열객체 생성 후 Array.push() 함수로 값을 추가하는 방법에 비해 빠르다. (copyPushForIndexCount:1.8ms vs copyIndexForIndexCountFixedInit:0.2ms)
+* 배열의 순회 속도는 '인덱스를 이용한 접근'이 가장 빠르며 'Array.forEach() 를 이용한 접근', 'for-in 구문의 활용' 순으로 빠른 동작속도를 보인다.
+* for 문의 인덱스를 이용한 방법과 while 문의 인덱스를 이용한 방법은 그 동작 속도가 비슷하다.
+* Array.unshift()는 Array.push()에 비해 동작속도가 매우 느리다.
+* 자바스크립트 내장함수인 Array.slice()및 Array.concat()의 객체 복사 속도가 빠른 편이다..
+
+```
+========================================================
+Copying array - size : 100000 / sampling count : 10
+--------------------------------------------------------
+copyPushForIndexCount : 1.8ms
+copyPushForIn : 43.2ms
+copyPushArrayForeach : 3ms
+copyPushForIndexCountFixedInit : 5.6ms
+copyPushForInFixedInit : 45.4ms
+copyPushArrayForeachFixedInit : 4.9ms
+copyUnshiftForIndexCount : 1943.9ms
+copyUnshiftForIn : 1983.5ms
+copyUnshiftArrayForeach : 1934.8ms
+copyUnshiftForIndexCountFixedInit : 17118.9ms
+copyUnshiftForInFixedInit : 26391.2ms
+copyUnshiftArrayForeachFixedInit : 26395.6ms
+copyIndexForIndexCount : 2ms
+copyIndexForIn : 54.9ms
+copyIndexArrayForeach : 2.2ms
+copyIndexForIndexCountFixedInit : 0.2ms
+copyIndexForInFixedInit : 47.1ms
+copyIndexArrayForeachFixedInit : 1.9ms
+copyIndexWhileIndexCount : 7.5ms
+copyIndexWhileIndexCountFixedInit : 0.4ms
+copySlice : 0.2ms
+copySliceZero : 0.2ms
+copyConcat : 0.1ms
+copyJSON : 4.7ms
+========================================================
+```
+
+위 결과중 1ms 미만의 동작속도를 보이는 값은 수행시간이 매우 짧은 관계로 자바스크립트 동작 이외의 다른 요소로 인안 오차 발생의 가능성이 있을 수 있다. 이에 빠른 속도를 보인 5가지 방법을 대상으로 1000만개의 원소를 가진 배열을 복사하는 테스트를 다시 수행했다.
+
+수행 결과 고정길이로 배열을 선언하고 인덱스를 이용하여 값을 일일히 복사하는 방법이 자바스크립트의 내장함수들을 이용하는 방법에 비해 확연히 빠른 동작속도를 보인다는 것을 알 수 있었다. 그리고 For 구문과 While구문을 비교하면 For구문이 다소 빠른 속도를 보이는 것을 볼 수 있는데, 이는 While구문을 이용한 방법의 경우 복사한 배열의 순서를 맞추기 위해 Array.reverse()함수를 호출하는 것 때문에 수행시가이 증가 한 것으로 판단된다.
+
+```
+========================================================
+Copying array - size : 10000000 / sampling count : 10
+--------------------------------------------------------
+copyIndexForIndexCountFixedInit : 16.2ms
+copyIndexWhileIndexCountFixedInit : 18.2ms
+copySlice : 49.6ms
+copySliceZero : 49.2ms
+copyConcat : 49.3ms
+========================================================
+```
+
+
+## 5. 결론
+지금까지 자바스크립트의 배열을 복사하는 방법에 대해 알아보고 어떤 방법이 빠르게 동작하는지 테스트 해 보았다. 앞서 소개한 내용을 바탕으로 자바스크립트 개발시 배열을 복사하는 방법으로 다음 두 가지 방법을 추천한다.
+
+### 5.1 빠른 동작 속도를 요구하는 시스템
+빠른 동작속도를 요구하는 시스템에서는 고정길이의 배열을 선언하고 배열의 인덱스 순회하며 값을 대입하는 방법의 복사를 추천한다. 단순 자바스크립트 객체의 값의 대입을 이용한 방법이므로, 시스템의 메모리 구조 및 자바스크립트 컴파일러의 최적화 방향에 따라 성능 차이가 있을 수 있으므로 적용에 앞서 각 시스템별 성능 테스트가 필요 할 수 있다.
+```javascript
+function copyArray(originArray){
+	var index = 0,
+        targetSize = originArray.length,
+        targetArray = new Array(targetSize);
+
+    for(index = 0 ; index < targetSize ; index++) {
+    	targetArray[index] = originArray[index];
+    }
+
+    return targetArray;
+}
+```
+
+### 5.2 간결한 코드를 필요로하는 시스템
+
 
 ## 참고
 * The way to create Javascript arrays : http://stackoverflow.com/questions/885156/whats-wrong-with-var-x-new-array
