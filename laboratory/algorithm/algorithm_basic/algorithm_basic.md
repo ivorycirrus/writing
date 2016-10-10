@@ -30,8 +30,23 @@
 1. 해(solution)의 후보 목록
 2. 후보목록에서 해를 선택하기 위한 결정함수(selection function)
 3. 선택한 해의 적정성(feasibility)판별 함수
-4. 해를 구하기 위한 값 또는 구하는 과정(partial solution)을 저장할 함수
+4. 해 또는 부분해 집합을(partial solution)을 저장할 함수
 5. 전체의 해를 구하고 저장하는 함수
+
+### 1.3 예시 - 거스름돈 계산
+
+### 1.4 활용 분야
+
+* [외판원 문제 (Travelling Salesman Problem)](https://en.wikipedia.org/wiki/Travelling_salesman_problem)
+* [최소 신장 트리 (Minimal Spanning Tree)](https://en.wikipedia.org/wiki/Minimum_spanning_tree)
+    * [Prim's Algorithm](https://en.wikipedia.org/wiki/Prim%27s_algorithm)
+    * [Kruskal's Algorithm](https://en.wikipedia.org/wiki/Kruskal%27s_algorithm)
+    * [Dijkstra's Algorithm](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm)
+* 그래프 (Graph)
+    * [Map Coloring](https://en.wikipedia.org/wiki/Greedy_coloring)
+    * [Vertex Cover](https://en.wikipedia.org/wiki/Vertex_cover)
+* [배낭 문제(Knapsack Problem)](https://en.wikipedia.org/wiki/Knapsack_problem)
+* [잡-샵 스케쥴링 문제(Job Scheduling Problem)](https://en.wikipedia.org/wiki/Job_shop_scheduling)
 
 ## References
 
