@@ -1,7 +1,7 @@
 # ML Kit
 
 ## 개요
-[Google ML Kit](https://www.google.com/get/cardboard/) 을 이용한 모바일 머신러닝에 대한 주제를 다룹니다.
+[Google ML Kit](https://developers.google.com/ml-kit/) 을 이용한 모바일 머신러닝에 대한 주제를 다룹니다.
 
 ## 목차
 TBD
