@@ -1,6 +1,6 @@
 # Writings
 
-개발 관련 관심사를 정리합니다.
+개발 관련 관심사를 정리합니다.<br/>
 이 곳은 작성중이거나 실험중인 주제들을 공유하고 있습니다.
 
 정리와 작성이 완료된 항목은 [IvoryCirrus's Lab](https://ivorycirrus.github.io/)에서 보실 수 있습니다.
