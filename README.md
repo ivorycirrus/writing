@@ -1,6 +1,9 @@
 # Writings
 
 개발 관련 관심사를 정리합니다.
+이 곳은 작성중이거나 실험중인 주제들을 공유하고 있습니다.
+
+정리와 작성이 완료된 항목은 [IvoryCirrus's Lab](https://ivorycirrus.github.io/)에서 보실 수 있습니다.
 
 ## Contents
 
@@ -16,6 +19,8 @@
     * [Big Integer with Javascript](laboratory/javascript/big_integer/post_bigint_v1.md)
     * [빠르게 자바스크립트의 배열을 복사하는 방법에 대한 실험](laboratory/javascript/array_copy/post_array_clone.md)
 
+### ML Kit : 모바일 머신러닝
+* [ML Kit 소개](ml_kit/docs/mlkit01_introduction.md)
 
 ## License
 This work is licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-nc-sa/4.0/).
