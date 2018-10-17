@@ -13,3 +13,23 @@
 
 * **[dl4vanilla.js](https://github.com/ivorycirrus/dl4vanillajs)** : Javascript로 작성한 행렬연산 및 인공신경망(ANN) 작성 유틸리티
 * **[dl4vanilla.js 예제](https://github.com/ivorycirrus/dl4vanillajs-node-example)** : Node.js로 실행 할 수 있는 다층퍼셉트론(MLP) 예제.
+
+## 2. 필요한 도구를 만들자
+
+### 2.1 행렬 연산
+
+### 2.2 활성화 함수
+
+### 2.3 수치미분
+
+## 3. 샘플 프로젝트 - XOR 문제
+
+### 3.1 모델 정의
+
+### 3.2 모델 학습
+
+### 3.3 평가
+
+## 4. 결론 및 고찰
+
+
