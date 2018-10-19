@@ -100,6 +100,34 @@ let _eval_mat = function(arr1, func) {
 
 
 ### 2.2 활성화 함수
+인공신경망의 연산은 기본적으로 행렬의 합과 곱으로 이루어진다. 하지만 단순한 행렬의 합과 곱은 연산을 여러번 수행한 다 할지라도 결국에는 단순한 선형변환의 형태로 표현될 수 밖에 없다. 즉 신경망을 여러번 연결해도 효과를 거두기 어렵다는 뜻이다. [활성화함수](https://towardsdatascience.com/activation-functions-neural-networks-1cbd9f8d91d6)는 행렬의 연산에 비선형성을 추가해서 신경망 사이의 데이터 전달히 선형변환의 형태로 단순화되지 않도록 하는 역할을 해 준다.
+
+대표적인 활성화 함수에는 Sigmoid, ReLU, tanh 등이 있다. 여기에서는 간단한 형태의 분류를 위한 지도학습을 구현할 예정이므로 Sigmoid와 ReLU함수를 준비했다. 먼저 스칼라 값을 처리 할 수 있는 활성화함수를 선언하고, 행렬연산을 위해 준비한 함수 가운데 `eval(arr,func)`을 이용해서 행렬의 각 원소에 활성화함수를 적용하도록 했다.
+
+```javascript
+// [[ nn/activation_function.js ]]
+// https://github.com/ivorycirrus/dl4vanillajs/blob/master/nn/activation_function.js
+
+/* Sigmoid(x) = 1/(1+exp(-x))*/
+const _func_sigmoid = function(x){return 1.0/(1.0+Math.exp(-x));};
+let _sigmoid = function(arr){
+	if(typeof arr == `number`) return _func_sigmoid(arr);
+	else if(Array.isArray(arr)) return mat.eval(arr, _func_sigmoid);
+	else throw "SigmoidException : parameter has not suppoeted type.";
+};
+
+/*
+ReLU(y) = { x  (x>0)
+          { 0  (x<=0)
+*/
+const _func_relu = (x) => x>0?x:0;
+let _relu = function(arr){
+	if(typeof arr == `number`) return _func_relu(arr);
+	else if(Array.isArray(arr)) return mat.eval(arr, _func_relu);
+	else throw "ReLUException : parameter has not suppoeted type.";
+};
+```
+
 
 ### 2.3 수치미분
 
