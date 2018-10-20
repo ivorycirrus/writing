@@ -130,6 +130,48 @@ let _relu = function(arr){
 
 
 ### 2.3 수치미분
+신경망을 학습시키기 위해서는 입력값과 가중치의 행렬연산으로 구한 추정치가 정답 또는 최적의 답과 얼마나 오차가 있는지, 오차를 줄이려면 가중치를 작게 해야 하는지 크게 해야 하는지에 대한 결정이 필요하다. 다시 말해, 가중치 값을 아주 조금 움직였을 때 가중치가 줄어드는 방향쪽으로 가중치를 수정하면 될 것이다. 이는 가중치의 움직임에 따른 오차의 변화를 미분한 것으로 볼 수 있다. 하지만 복잡한 신경망 전체에 대해 해석적인 방법으로 미분값을 구하는 것은 쉬운 일이 아니며, 우리는 이미 정의된 신경망 모델이 있으므로 이를 이용해 수치적인 방법으로 미분값을 구할 수 있을 것이다.
+
+수치적인 방법으로 미분값을 구하는 방법은 아주 작은 입력값의 변화에따른 함수의 기울기를 구하는 방법을 사용한다. 신경망 학습을 위한 좀 더 나은 미분 방법으로, [미분의 연쇄법칙(Chain rule)](https://en.wikipedia.org/wiki/Chain_rule)을 이용한 [오차 역전파(Backpropagation)](http://cs231n.github.io/optimization-2/)를 적용하면 모델의 각 계충마다 미분을 수행하는 횟수를 줄일 수 있어 학습성능을 크게 향상시킬 수 있다. 여기서는 Javascript를 이용한 간단한 신경명의 구현에 초점을 맞추고 있으므로, 오차역전파가 적용되지 않은 가장 단순한 형태의 수치 미분을 구현했다. 
+
+```javascript
+// [[ math/derivative.js ]]
+// https://github.com/ivorycirrus/dl4vanillajs/blob/master/math/derivative.js
+
+/* Numerical Gradient */
+let _numerical_gradient = function(f, x, h=0.0000001) {
+	if(typeof f !== `function`) {
+		throw "DerivativeException : first parameter is not function";
+	} else if(Array.isArray(x)) {
+		const _partial_diff = function(arr){				
+			let grad = [];
+			if(Array.isArray(arr[0])) {
+				for(let i = 0 ; i < arr.length ; i++){
+					grad.push(_partial_diff(arr[i]));
+				}		
+			} else {
+				for(let i = 0 ; i < arr.length ; i++){
+					let temp = arr[i];
+					arr[i] = temp+h;
+					let dhp = f(arr[i]);
+
+					arr[i] = temp-h;
+					let dhn = f(arr[i]);
+
+					arr[i] = temp;
+					grad.push((dhp-dhn)/(2.0*h));
+				}
+			}
+			return grad;
+		};
+		
+		return _partial_diff(x);
+	} else {
+		throw "DerivativeException : second parameter is suitable";
+	}
+}
+```
+
 
 ## 3. 샘플 프로젝트 - XOR 문제
 
