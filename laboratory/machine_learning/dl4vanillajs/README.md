@@ -352,6 +352,8 @@ Prediction : 1.00 	Correct : 1.00
 Prediction : 0.01 	Correct : 0.00
 ```
 
-## 4. 결론 및 고찰
+## 4. 마치며
+개발자들 사이에서 많이 언급되는 격언 중에 '[바퀴를 재발명하지 마라](http://unikys.tistory.com/373)(
+[Reinventing the wheel](https://en.wikipedia.org/wiki/Reinventing_the_wheel))'라는 말이 있다. 풀어서 말하자면, 이미 다른사람들이 많읃러 놓은 성능과안정성이 검증된 훌륭한도구들이 많은데, 굳이 시간낭비 해 가면서 처음부터 다시 만드는 수고 들이지 말라고 조언할때 쓰이는 말이다. 그렇다. 이 글은 바퀴를 재발명하는 과정의 이야기를 담은 글이 맞다. 하지만 그 과정에서 인공신경망이 어떻게 값을 추정하는지, 그리고 어떤과정을 거쳐 최적의 값을 찾아가는 훈련을 수행하는지를 세밀하게 살펴볼 수 있었다. 보태어 Javascript의 배열 연산을 처리하는 방법, 특히 배열의 내장함수나 [누산기(Accumulator)](https://medium.freecodecamp.org/reduce-f47a7da511a9)를 사용하는 방법에 대해 깊이 고민해 볼수 있는 계기가 되었다.
 
-
+더 나아가 Javascript로 Deep Learning을 구현해 보고자 한다면 [Tensorflow.js](https://js.tensorflow.org/)라는 도구를 추천하고 싶다. 이는 Python이나 C++로 작성된 Tensorflow와 같은 메소드 및 데이터를 활용할 수도 있으며, [Github에 훌륭한 예제](https://github.com/tensorflow/tfjs-examples)도 공개되어 있다. Javascript를 이용한 Deep Learning는 웹 환경에서의 인공지능 서비스 애플리케이션을 작성하는 좋은 도구가 될 수 있을 것이라 생각한다. 그리고 이런 웹환경에서의 인공지능 서비스를 개발하는데 있어 이 글과 이 글에서 소개한 시도가 Python이 아니어도 Deep Learning 애플리케이션을 개발할 수 있다는 작은 용기가 되길 희망한다.
