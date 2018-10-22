@@ -210,11 +210,148 @@ let MultiLayerNet = function(input_size, hidden_size, output_size){
 ```
 
 ### 3.2 모델 학습
+입력값으로 추정치를 구하는 순전파는 아래와 같이 입력에 가중치를 곱하고 편차를 더해서 활성화함수를 적용하는 방법으로 구성했다. 활성화함수는 Sigmoid를 사용했으며, 원하는 출력값의 범위도 0과 1사이의 값므로 출력층의 활성화함수 또한 Sigmoid를 적용했다.
+
+```javascript
+// [[ ex02_xor_problem.js ]]
+// https://github.com/ivorycirrus/dl4vanillajs-node-example/blob/master/ex02_xor_problem.js
+
+// forward process
+thiz.predict = function(x){
+	// layer 1
+	let L1 = dl.mat.mul(x, thiz.params['W1']);
+	L1 = dl.mat.add(L1, thiz.params['b1']);
+	L1 = dl.actv.sigmoid(L1);
+	// layer 2
+	let L2 = dl.mat.mul(L1, thiz.params['W2']);
+	L2 = dl.mat.add(L2, thiz.params['b2']);
+	L2 = dl.actv.sigmoid(L2);
+	// output layer
+	let Lout = dl.mat.mul(L2, thiz.params['Wout']);
+	Lout = dl.mat.add(Lout, thiz.params['bout']);
+	Lout = dl.actv.sigmoid(Lout);
+	// output
+	return Lout;
+};
+```
+
+순전파의 결과와 정답 사이의 오차를 구하는 함수로는 [Cross-Entropy with Logits](https://gombru.github.io/2018/05/23/cross_entropy_loss) 함수를 적용했다. 이는 신경망으로 구한 y 값과 정답 t값이 얼마나 오차가 있는지 구해주는 기능을 한다.
+
+```javascript
+// [[ ex02_xor_problem.js ]]
+// https://github.com/ivorycirrus/dl4vanillajs-node-example/blob/master/ex02_xor_problem.js
+
+// Loss function
+thiz.loss = function(x, t){		
+	let y = thiz.predict(x);
+	return dl.loss.cross_entropy_with_logits(y, t);
+};
+```
+
+마지막으로 위의 오차함수와 학습율을 옵티마이저에 전달해서 가중치를 갱신하도록 한다. 옵티마이저는 수치미분을 이용한 단순 경사하강법으로 최적값을 찾아가도록 설계했다. `train`함수를 최초 기획할 때에는 미니배치를 이용한 [확률적 경사하강법(Stochastic Gradient Decent method)](https://towardsdatascience.com/difference-between-batch-gradient-descent-and-stochastic-gradient-descent-1187f1291aa1)도 고려하고자 했으나, 여기에서는 각각의 입력값마다 미분값을 구하는 일반적인 경사하강법 까지만 구현하고 있다.
+
+```javascript
+// [[ ex02_xor_problem.js ]]
+// https://github.com/ivorycirrus/dl4vanillajs-node-example/blob/master/ex02_xor_problem.js
+
+// Train weights and biases
+thiz.train = function(x, t, batch_size){
+	for(let b = 0 ; b < batch_size ; b++){
+		let _x = x.slice(b,b+1);
+		let _t = t.slice(b,b+1);
+		for(i in thiz.params) {
+			thiz.params[i] = dl.opt.gradient_decent_optimizer(()=>thiz.loss(_x,_t), thiz.params[i], LEARNING_RATE);
+		}
+	}
+};
+```
+
+```javascript
+// [[ nn/optimizer.js ]]
+// https://github.com/ivorycirrus/dl4vanillajs/blob/master/nn/optimizer.js
+
+/* Gradient Decent Optimizer */
+let _gradient_decent_optimizer = function(f, x, lr=0.001){
+	if(typeof f !== `function`) {
+		throw "OptimizerException : first parameter is not function";
+	} else if(!Array.isArray(x)) {
+		throw "OptimizerException : second parameter is not array";
+	}
+
+	let grad = diff.grad(f, x);
+	let trained = mat.add(x, mat.mul(grad, -1.0*lr));
+
+	return trained;
+};
+```
 
 ### 3.3 평가
+다음은 모델의 학습 및 평가결과이다. 학습율을 `0.01`로 해서 2001 에포크(Epoch)만큼 학습한 결과 오차는 약 `0.24`정도이며, XOR평가를 위한 네 개의 값이 유의한 수준에서 분류되는 것을 확인 할 수 있다. 
+
+```
+$ node ex02_xor_problem.js
+==[TRAIN]==
+step : 0 loss : 0.9823129621716575
+step : 200 loss : 0.5809593623619813
+step : 400 loss : 0.5251647745298205
+step : 600 loss : 0.4857023698210541
+step : 800 loss : 0.4516157963438475
+step : 1000 loss : 0.4188023743659243
+step : 1200 loss : 0.3851033533690704
+step : 1400 loss : 0.34942643976702165
+step : 1600 loss : 0.31207226355231443
+step : 1800 loss : 0.2750145679970029
+step : 2000 loss : 0.24064839885348238
+==[TEST]==
+Prediction : 0.13 	Correct : 0.00
+Prediction : 0.70 	Correct : 1.00
+Prediction : 0.89 	Correct : 1.00
+Prediction : 0.29 	Correct : 0.00
+```
+
+물론 가중치가 어떻게 초기화 했는지에 따라 아래와 같이 2001회의 학습이 충분하지 않을 수 있다. 임의의 초기값을 가지고 2001에포크를 학습한 다 할지라도 경우에 따라 오차가 `0.5`이상이며, 입력값이 `[1,0]`인 XOR값을 `0.34`로 오답을 내는 상황이 발생할 수 있다.
+```
+==[TRAIN]==
+step : 0 loss : 0.9880284306212831
+step : 200 loss : 0.6019301518619822
+step : 400 loss : 0.5668457641058527
+step : 600 loss : 0.5477305276780536
+step : 800 loss : 0.5356430221097995
+step : 1000 loss : 0.5272774189972985
+step : 1200 loss : 0.521101848949871
+step : 1400 loss : 0.5163244034156572
+step : 1600 loss : 0.512496475979676
+step : 1800 loss : 0.5093447391416038
+step : 2000 loss : 0.5066926080889506
+==[TEST]==
+Prediction : 0.36 	Correct : 0.00
+Prediction : 0.95 	Correct : 1.00
+Prediction : 0.34 	Correct : 1.00
+Prediction : 0.35 	Correct : 0.00
+```
+
+하지만 이는 학습의 문제이며, 충분히 많은 횟수의 반복학습을 통해 정확도를 개선 할 수 있을 것이다. 예제 프로젝트에는 `pre_trained/ex02_pretrained_weights.json`에 미리 학습한 가중치의 초기값이 포함되어 있으며, `FILE_PRE_TRAINED` 변수에 해당 파일명을 지정해주면 임의의 초기값이 아닌 이미 학습된 초기값을 사용할 수 있다. 사전학습된 가중치는 `0.005`가량의 작은 오차를 내는 가중치이며, 물론 이를 초기값으로 2001에포크만큼 추가학습하면 오차가 더 줄어드는 것을 볼 수 있다. 
+
+```
+==[TRAIN]==
+step : 0 loss : 0.005468257253796859
+step : 200 loss : 0.0053710141731233675
+step : 400 loss : 0.005277006523766076
+step : 600 loss : 0.005186078832492771
+step : 800 loss : 0.005098085310905433
+step : 1000 loss : 0.00501288911878565
+step : 1200 loss : 0.004930361693683351
+step : 1400 loss : 0.004850382138454004
+step : 1600 loss : 0.004772836663248752
+step : 1800 loss : 0.0046976180757801935
+step : 2000 loss : 0.004624625311294744
+==[TEST]==
+Prediction : 0.00 	Correct : 0.00
+Prediction : 1.00 	Correct : 1.00
+Prediction : 1.00 	Correct : 1.00
+Prediction : 0.01 	Correct : 0.00
+```
 
 ## 4. 결론 및 고찰
-
-
 
 
