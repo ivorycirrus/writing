@@ -132,7 +132,7 @@ let _relu = function(arr){
 ### 2.3 수치미분
 신경망을 학습시키기 위해서는 입력값과 가중치의 행렬연산으로 구한 추정치가 정답 또는 최적의 답과 얼마나 오차가 있는지, 오차를 줄이려면 가중치를 작게 해야 하는지 크게 해야 하는지에 대한 결정이 필요하다. 다시 말해, 가중치 값을 아주 조금 움직였을 때 가중치가 줄어드는 방향쪽으로 가중치를 수정하면 될 것이다. 이는 가중치의 움직임에 따른 오차의 변화를 미분한 것으로 볼 수 있다. 하지만 복잡한 신경망 전체에 대해 해석적인 방법으로 미분값을 구하는 것은 쉬운 일이 아니며, 우리는 이미 정의된 신경망 모델이 있으므로 이를 이용해 수치적인 방법으로 미분값을 구할 수 있을 것이다.
 
-수치적인 방법으로 미분값을 구하는 방법은 아주 작은 입력값의 변화에따른 함수의 기울기를 구하는 방법을 사용한다. 신경망 학습을 위한 좀 더 나은 미분 방법으로, [미분의 연쇄법칙(Chain rule)](https://en.wikipedia.org/wiki/Chain_rule)을 이용한 [오차 역전파(Backpropagation)](http://cs231n.github.io/optimization-2/)를 적용하면 모델의 각 계충마다 미분을 수행하는 횟수를 줄일 수 있어 학습성능을 크게 향상시킬 수 있다. 여기서는 Javascript를 이용한 간단한 신경명의 구현에 초점을 맞추고 있으므로, 오차역전파가 적용되지 않은 가장 단순한 형태의 수치 미분을 구현했다. 
+수치적인 방법으로 미분값을 구하는 방법은 아주 작은 변수의 변화에 따른 함수의 기울기를 구하는 방법을 사용한다. 신경망 학습을 위한 좀 더 나은 미분 방법으로, [미분의 연쇄법칙(Chain rule)](https://en.wikipedia.org/wiki/Chain_rule)을 이용한 [오차 역전파(Backpropagation)](http://cs231n.github.io/optimization-2/)를 적용하면 모델의 각 계충마다 미분을 수행하는 횟수를 줄일 수 있어 학습성능을 크게 향상시킬 수 있다. 여기서는 Javascript를 이용한 간단한 신경명의 구현에 초점을 맞추고 있으므로, 오차역전파가 적용되지 않은 가장 단순한 형태의 수치 미분을 구현했다. 
 
 ```javascript
 // [[ math/derivative.js ]]
@@ -174,8 +174,39 @@ let _numerical_gradient = function(f, x, h=0.0000001) {
 
 
 ## 3. 샘플 프로젝트 - XOR 문제
+샘플 프로젝트로는 가장 단순한 형태의 비선형 이진분류 문제인 [XOR문제](https://medium.com/@jayeshbahire/the-xor-problem-in-neural-networks-50006411840b)를 선택했다. XOR문제는 단순 션형분류로는 구현하기 어려우며, 인공신경망으로 구현한경우 최소한 한개 이상의 은닉층(Hidden layer)를 포함해야 한다. 여기에서는 두개의 은닉층을 사용하는 모델을 구성해서 좀 더 복잡한 인공신경망을 구성 할 수 있는지에 대한 가능성을 함께 살펴보고자 한다.
 
 ### 3.1 모델 정의
+
+```javascript
+// [[ ex02_xor_problem.js ]]
+// https://github.com/ivorycirrus/dl4vanillajs-node-example/blob/master/ex02_xor_problem.js
+
+// artificial neural nets with 3 layers
+let MultiLayerNet = function(input_size, hidden_size, output_size){
+	let thiz = this;
+
+	if(!(thiz.params = storage.read(FILE_PRE_TRAINED))) {
+		thiz.params = {
+			'W1' : dl.mat.matrix([input_size, hidden_size], x=>(Math.random()*10.0-5.0)),
+			'b1' : dl.mat.matrix([1,hidden_size], 0),
+			'W2' : dl.mat.matrix([hidden_size, hidden_size], x=>(Math.random()*10.0-5.0)),
+			'b2' : dl.mat.matrix([1,hidden_size], 0),
+			'Wout' : dl.mat.matrix([hidden_size, output_size], x=>(Math.random()*10.0-5.0)),
+			'bout' : dl.mat.matrix([1,output_size], 0)
+		};
+	}
+
+	// forward process
+	thiz.predict = function(x){	/* ... Skip Implimentation ... */ };
+
+	// Loss function
+	thiz.loss = function(x, t){	/* ... Skip Implimentation ... */ };
+
+	// Train weights and biases
+	thiz.train = function(x, t, batch_size){	/* ... Skip Implimentation ... */ };
+};
+```
 
 ### 3.2 모델 학습
 
