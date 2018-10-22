@@ -177,6 +177,7 @@ let _numerical_gradient = function(f, x, h=0.0000001) {
 샘플 프로젝트로는 가장 단순한 형태의 비선형 이진분류 문제인 [XOR문제](https://medium.com/@jayeshbahire/the-xor-problem-in-neural-networks-50006411840b)를 선택했다. XOR문제는 단순 션형분류로는 구현하기 어려우며, 인공신경망으로 구현한경우 최소한 한개 이상의 은닉층(Hidden layer)를 포함해야 한다. 여기에서는 두개의 은닉층을 사용하는 모델을 구성해서 좀 더 복잡한 인공신경망을 구성 할 수 있는지에 대한 가능성을 함께 살펴보고자 한다.
 
 ### 3.1 모델 정의
+아래는 같이 가중치를통한 값의 추정과 오차계산, 그리고 훈련에 대한 동작을 포함하는 세개의 레이어를 가진 신경망이다.
 
 ```javascript
 // [[ ex02_xor_problem.js ]]
