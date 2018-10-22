@@ -177,7 +177,7 @@ let _numerical_gradient = function(f, x, h=0.0000001) {
 샘플 프로젝트로는 가장 단순한 형태의 비선형 이진분류 문제인 [XOR문제](https://medium.com/@jayeshbahire/the-xor-problem-in-neural-networks-50006411840b)를 선택했다. XOR문제는 단순 션형분류로는 구현하기 어려우며, 인공신경망으로 구현한경우 최소한 한개 이상의 은닉층(Hidden layer)를 포함해야 한다. 여기에서는 두개의 은닉층을 사용하는 모델을 구성해서 좀 더 복잡한 인공신경망을 구성 할 수 있는지에 대한 가능성을 함께 살펴보고자 한다.
 
 ### 3.1 모델 정의
-아래는 같이 가중치를통한 값의 추정과 오차계산, 그리고 훈련에 대한 동작을 포함하는 세개의 레이어를 가진 신경망이다.
+아래는 XOR값의 추정과 오차계산, 그리고 훈련에 대한 동작을 포함하는 세개의 레이어를 가진 신경망이다. W1, W2, Wout는 각각 첫번째 은닉층과 두번째 은닉층 그리고 출력층의 가중치 값이며, b1, b2, bout는 마찬가지로 각 층의 편차값에 해당한다. 은닉층의 뉴런의 수는 모델 생성시 파라메터로 입력받고 있으며, 각 은닉층의 누런의 수를 세부적으로 설정할 수 있도록 하지는 않았다. 가중치와 편차의 초기값은 -5 ~ 5 까지의 임의의 값으로 설정해서 0이나 1과같이 같은 값으로 초기화했을 때보다 조금 빨리 해에 수렴할 수 있도록 했다. 물론 각 초기값은 활성화함수에 따라 [Xavier 또는 He초기값을](https://stats.stackexchange.com/questions/319323/whats-the-difference-between-variance-scaling-initializer-and-xavier-initialize/319849)사용하는 것이 성능상 이점이 있을수 있으나, 코드작성 측면에서 간단한 방법을 선택했다.
 
 ```javascript
 // [[ ex02_xor_problem.js ]]
@@ -199,13 +199,13 @@ let MultiLayerNet = function(input_size, hidden_size, output_size){
 	}
 
 	// forward process
-	thiz.predict = function(x){	/* ... Skip Implimentation ... */ };
+	thiz.predict = function(x){ /* ... Skip Implimentation ... */ };
 
 	// Loss function
-	thiz.loss = function(x, t){	/* ... Skip Implimentation ... */ };
+	thiz.loss = function(x, t){ /* ... Skip Implimentation ... */ };
 
 	// Train weights and biases
-	thiz.train = function(x, t, batch_size){	/* ... Skip Implimentation ... */ };
+	thiz.train = function(x, t, batch_size){ /* ... Skip Implimentation ... */ };
 };
 ```
 
