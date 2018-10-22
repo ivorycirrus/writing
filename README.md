@@ -19,6 +19,9 @@
     * [Big Integer with Javascript](laboratory/javascript/big_integer/post_bigint_v1.md)
     * [빠르게 자바스크립트의 배열을 복사하는 방법에 대한 실험](laboratory/javascript/array_copy/post_array_clone.md)
 
+* **Machine Learning**
+    * [Javascript로 Deep-learning 맛보기](machine_learning/dl4vanillajs/README.md)
+
 ### ML Kit : 모바일 머신러닝
 * [ML Kit 소개](ml_kit/docs/mlkit01_introduction.md)
 
