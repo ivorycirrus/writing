@@ -100,7 +100,7 @@ let _eval_mat = function(arr1, func) {
 
 
 ### 2.2 활성화 함수
-인공신경망의 연산은 기본적으로 행렬의 합과 곱으로 이루어진다. 하지만 단순한 행렬의 합과 곱은 연산을 여러번 수행한 다 할지라도 결국에는 단순한 선형변환의 형태로 표현될 수 밖에 없다. 즉 신경망을 여러번 연결해도 효과를 거두기 어렵다는 뜻이다. [활성화함수](https://towardsdatascience.com/activation-functions-neural-networks-1cbd9f8d91d6)는 행렬의 연산에 비선형성을 추가해서 신경망 사이의 데이터 전달히 선형변환의 형태로 단순화되지 않도록 하는 역할을 해 준다.
+인공신경망의 연산은 기본적으로 행렬의 합과 곱으로 이루어진다. 하지만 단순한 행렬의 합과 곱은 연산을 여러번 수행한 다 할지라도 결국에는 단순한 선형변환의 형태로 표현될 수 밖에 없다. 즉 신경망을 여러번 연결해도 효과를 거두기 어렵다는 뜻이다. [활성화함수](https://towardsdatascience.com/activation-functions-neural-networks-1cbd9f8d91d6)는 행렬의 연산에 비선형성을 추가해서 신경망 사이의 데이터 전달이 선형변환의 형태로 단순화되지 않도록 하는 역할을 해 준다.
 
 대표적인 활성화 함수에는 [Sigmoid](https://en.wikipedia.org/wiki/Sigmoid_function), [ReLU](https://en.wikipedia.org/wiki/Rectifier_(neural_networks)), [tanh](https://en.wikipedia.org/wiki/Hyperbolic_function) 등이 있다. 여기에서는 간단한 형태의 분류를 위한 지도학습을 구현할 예정이므로 Sigmoid와 ReLU함수를 준비했다. 먼저 스칼라 값을 처리 할 수 있는 활성화함수를 선언하고, 행렬연산을 위해 준비한 함수 가운데 `eval(arr,func)`을 이용해서 행렬의 각 원소에 활성화함수를 적용하도록 했다.
 
@@ -132,7 +132,7 @@ let _relu = function(arr){
 ### 2.3 수치미분
 신경망을 학습시키기 위해서는 입력값과 가중치의 행렬연산으로 구한 추정치가 정답 또는 최적의 답과 얼마나 오차가 있는지, 오차를 줄이려면 가중치를 작게 해야 하는지 크게 해야 하는지에 대한 결정이 필요하다. 다시 말해, 가중치 값을 아주 조금 움직였을 때 가중치가 줄어드는 방향쪽으로 가중치를 수정하면 될 것이다. 이는 가중치의 움직임에 따른 오차의 변화를 미분한 것으로 볼 수 있다. 하지만 복잡한 신경망 전체에 대해 해석적인 방법으로 미분값을 구하는 것은 쉬운 일이 아니며, 우리는 이미 정의된 신경망 모델이 있으므로 이를 이용해 수치적인 방법으로 미분값을 구할 수 있을 것이다.
 
-수치적인 방법으로 미분값을 구하는 방법은 아주 작은 변수의 변화에 따른 함수의 기울기를 구하는 방법을 사용한다. 신경망 학습을 위한 좀 더 나은 미분 방법으로, [미분의 연쇄법칙(Chain rule)](https://en.wikipedia.org/wiki/Chain_rule)을 이용한 [오차 역전파(Backpropagation)](http://cs231n.github.io/optimization-2/)를 적용하면 모델의 각 계충마다 미분을 수행하는 횟수를 줄일 수 있어 학습성능을 크게 향상시킬 수 있다. 여기서는 Javascript를 이용한 간단한 신경명의 구현에 초점을 맞추고 있으므로, 오차역전파가 적용되지 않은 가장 단순한 형태의 수치 미분을 구현했다. 
+수치적인 방법으로 미분값을 구하는 방법은 아주 작은 변수의 변화에 따른 함수의 기울기를 구하는 방법을 사용한다. 신경망 학습을 위한 좀 더 나은 미분 방법으로, [미분의 연쇄법칙(Chain rule)](https://en.wikipedia.org/wiki/Chain_rule)을 이용한 [오차 역전파(Backpropagation)](http://cs231n.github.io/optimization-2/)를 적용하면 모델의 각 계충마다 미분을 수행하는 횟수를 줄일 수 있어 학습성능을 크게 향상시킬 수 있다. 하지만 여기서는 Javascript를 이용한 간단한 신경망의 구현에 초점을 맞추고 있으므로, 오차역전파가 적용되지 않은 가장 단순한 형태의 수치 미분을 구현했다. 
 
 ```javascript
 // [[ math/derivative.js ]]
@@ -174,10 +174,10 @@ let _numerical_gradient = function(f, x, h=0.0000001) {
 
 
 ## 3. 샘플 프로젝트 - XOR 문제
-샘플 프로젝트로는 가장 단순한 형태의 비선형 이진분류 문제인 [XOR문제](https://medium.com/@jayeshbahire/the-xor-problem-in-neural-networks-50006411840b)를 선택했다. XOR문제는 단순 션형분류로는 구현하기 어려우며, 인공신경망으로 구현한경우 최소한 한개 이상의 은닉층(Hidden layer)를 포함해야 한다. 여기에서는 두개의 은닉층을 사용하는 모델을 구성해서 좀 더 복잡한 인공신경망을 구성 할 수 있는지에 대한 가능성을 함께 살펴보고자 한다.
+샘플 프로젝트로는 가장 단순한 형태의 비선형 이진분류 문제인 [XOR문제](https://medium.com/@jayeshbahire/the-xor-problem-in-neural-networks-50006411840b)를 선택했다. XOR문제는 단순 션형분류로는 구현하기 어려우며, 인공신경망으로 구현할 경우 최소한 한개 이상의 은닉층(Hidden layer)를 포함해야 한다. 여기에서는 두개의 은닉층을 사용하는 모델을 구성해서 좀 더 복잡한 인공신경망을 구성 할 수 있는지에 대한 가능성을 함께 살펴보고자 한다.
 
 ### 3.1 모델 정의
-아래는 XOR값의 추정과 오차계산, 그리고 훈련에 대한 동작을 포함하는 세개의 레이어를 가진 신경망이다. W1, W2, Wout는 각각 첫번째 은닉층과 두번째 은닉층 그리고 출력층의 가중치 값이며, b1, b2, bout는 마찬가지로 각 층의 편차값에 해당한다. 은닉층의 뉴런의 수는 모델 생성시 파라메터로 입력받고 있으며, 각 은닉층의 누런의 수를 세부적으로 설정할 수 있도록 하지는 않았다. 가중치와 편차의 초기값은 -5 ~ 5 까지의 임의의 값으로 설정해서 0이나 1과같이 같은 값으로 초기화했을 때보다 조금 빨리 해에 수렴할 수 있도록 했다. 물론 각 초기값은 활성화함수에 따라 [Xavier 또는 He초기값을](https://stats.stackexchange.com/questions/319323/whats-the-difference-between-variance-scaling-initializer-and-xavier-initialize/319849)사용하는 것이 성능상 이점이 있을수 있으나, 코드작성 측면에서 간단한 방법을 선택했다.
+아래는 XOR값의 추정과 오차계산, 그리고 훈련에 대한 동작을 포함하는 세개의 레이어를 가진 신경망이다. W1, W2, Wout는 각각 첫번째 은닉층과 두번째 은닉층 그리고 출력층의 가중치 값이며, b1, b2, bout는 마찬가지로 각 층의 편차값에 해당한다. 은닉층의 뉴런의 수는 모델 생성시 파라메터로 입력받고 있으며, 각 은닉층의 뉴런의 수를 세부적으로 설정할 수 있도록 하지는 않았다. 가중치와 편차의 초기값은 -5 ~ 5 까지의 임의의 값으로 설정해서 0이나 1과같이 같은 값으로 초기화했을 때보다 조금 빨리 해에 수렴할 수 있도록 했다. 물론 각 초기값은 활성화함수에 따라 [Xavier 또는 He초기값을](https://stats.stackexchange.com/questions/319323/whats-the-difference-between-variance-scaling-initializer-and-xavier-initialize/319849)사용하는 것이 성능상 이점이 있을수 있으나, 코드작성 측면에서 간단한 방법을 선택했다.
 
 ```javascript
 // [[ ex02_xor_problem.js ]]
@@ -210,7 +210,7 @@ let MultiLayerNet = function(input_size, hidden_size, output_size){
 ```
 
 ### 3.2 모델 학습
-입력값으로 추정치를 구하는 순전파는 아래와 같이 입력에 가중치를 곱하고 편차를 더해서 활성화함수를 적용하는 방법으로 구성했다. 활성화함수는 Sigmoid를 사용했으며, 원하는 출력값의 범위도 0과 1사이의 값므로 출력층의 활성화함수 또한 Sigmoid를 적용했다.
+입력값으로 추정치를 구하는 순전파는 아래와 같이 입력에 가중치를 곱하고 편차를 더해서 활성화함수를 적용하는 방법으로 구성했다. 활성화함수는 Sigmoid를 사용했으며, 원하는 출력값의 범위도 0과 1사이의 값이므로 출력층의 활성화함수 또한 Sigmoid를 적용했다.
 
 ```javascript
 // [[ ex02_xor_problem.js ]]
@@ -309,7 +309,7 @@ Prediction : 0.89 	Correct : 1.00
 Prediction : 0.29 	Correct : 0.00
 ```
 
-물론 가중치가 어떻게 초기화 했는지에 따라 아래와 같이 2001회의 학습이 충분하지 않을 수 있다. 임의의 초기값을 가지고 2001에포크를 학습한 다 할지라도 경우에 따라 오차가 `0.5`이상이며, 입력값이 `[1,0]`인 XOR값을 `0.34`로 오답을 내는 상황이 발생할 수 있다.
+물론 가중치를 어떻게 초기화 했는지에 따라 아래와 같이 2001회의 학습이 충분하지 않을 수 있다. 임의의 초기값을 가지고 2001에포크를 학습한 다 할지라도 경우에 따라 오차가 `0.5`이상이며, 입력값이 `[1,0]`인 XOR값을 `0.34`로 오답을 내는 상황이 발생할 수 있다.
 ```
 ==[TRAIN]==
 step : 0 loss : 0.9880284306212831
@@ -330,7 +330,7 @@ Prediction : 0.34 	Correct : 1.00
 Prediction : 0.35 	Correct : 0.00
 ```
 
-하지만 이는 학습의 문제이며, 충분히 많은 횟수의 반복학습을 통해 정확도를 개선 할 수 있을 것이다. 예제 프로젝트에는 `pre_trained/ex02_pretrained_weights.json`에 미리 학습한 가중치의 초기값이 포함되어 있으며, `FILE_PRE_TRAINED` 변수에 해당 파일명을 지정해주면 임의의 초기값이 아닌 이미 학습된 초기값을 사용할 수 있다. 사전학습된 가중치는 `0.005`가량의 작은 오차를 내는 가중치이며, 물론 이를 초기값으로 2001에포크만큼 추가학습하면 오차가 더 줄어드는 것을 볼 수 있다. 
+하지만 이는 학습의 문제이며, 충분히 많은 횟수의 반복학습을 통해 정확도를 개선 할 수 있을 것이다. 예제 프로젝트에는 [pre_trained/ex02_pretrained_weights.json](https://github.com/ivorycirrus/dl4vanillajs-node-example/blob/master/pre_trained/ex02_pretrained_weights.json)에 미리 학습한 가중치의 초기값이 포함되어 있으며, `FILE_PRE_TRAINED` 변수에 해당 파일명을 지정해주면 임의의 초기값이 아닌 이미 학습된 초기값을 사용할 수 있다. 사전학습된 가중치는 `0.005`가량의 작은 오차를 내는 가중치이며, 물론 이를 초기값으로 2001에포크만큼 추가학습하면 오차가 더 줄어드는 것을 볼 수 있다. 
 
 ```
 ==[TRAIN]==
@@ -354,6 +354,6 @@ Prediction : 0.01 	Correct : 0.00
 
 ## 4. 마치며
 개발자들 사이에서 많이 언급되는 격언 중에 '[바퀴를 재발명하지 마라](http://unikys.tistory.com/373)(
-[Reinventing the wheel](https://en.wikipedia.org/wiki/Reinventing_the_wheel))'라는 말이 있다. 풀어서 말하자면, 이미 다른사람들이 많읃러 놓은 성능과안정성이 검증된 훌륭한도구들이 많은데, 굳이 시간낭비 해 가면서 처음부터 다시 만드는 수고 들이지 말라고 조언할때 쓰이는 말이다. 그렇다. 이 글은 바퀴를 재발명하는 과정의 이야기를 담은 글이 맞다. 하지만 그 과정에서 인공신경망이 어떻게 값을 추정하는지, 그리고 어떤과정을 거쳐 최적의 값을 찾아가는 훈련을 수행하는지를 세밀하게 살펴볼 수 있었다. 보태어 Javascript의 배열 연산을 처리하는 방법, 특히 배열의 내장함수나 [누산기(Accumulator)](https://medium.freecodecamp.org/reduce-f47a7da511a9)를 사용하는 방법에 대해 깊이 고민해 볼수 있는 계기가 되었다.
+[Reinventing the wheel](https://en.wikipedia.org/wiki/Reinventing_the_wheel))'라는 말이 있다. 풀어서 말하자면, 이미 다른 사람들이 만들어 놓은 성능과 안정성이 검증된 훌륭한 도구들이 많은데, 굳이 시간을 낭비 해 가면서 처음부터 다시 만드는 수고를 들이지 말라고 조언할때 쓰이는 말이다. 그렇다. 이 글은 바퀴를 재발명하는 과정의 이야기를 담은 글이 맞다. 하지만 그 과정에서 인공신경망이 어떻게 값을 추정하는지, 그리고 어떤 과정을 거쳐 최적의 값을 찾아가는 훈련을 수행하는지를 세밀하게 살펴볼 수 있었다. 보태어 Javascript의 배열 연산을 처리하는 방법, 특히 배열의 내장함수나 [누산기(Accumulator)](https://medium.freecodecamp.org/reduce-f47a7da511a9)를 사용하는 방법에 대해 깊이 고민해 볼수 있는 계기가 되었다.
 
-더 나아가 Javascript로 Deep Learning을 구현해 보고자 한다면 [Tensorflow.js](https://js.tensorflow.org/)라는 도구를 추천하고 싶다. 이는 Python이나 C++로 작성된 Tensorflow와 같은 메소드 및 데이터를 활용할 수도 있으며, [Github에 훌륭한 예제](https://github.com/tensorflow/tfjs-examples)도 공개되어 있다. Javascript를 이용한 Deep Learning는 웹 환경에서의 인공지능 서비스 애플리케이션을 작성하는 좋은 도구가 될 수 있을 것이라 생각한다. 그리고 이런 웹환경에서의 인공지능 서비스를 개발하는데 있어 이 글과 이 글에서 소개한 시도가 Python이 아니어도 Deep Learning 애플리케이션을 개발할 수 있다는 작은 용기가 되길 희망한다.
+더 나아가 Javascript로 Deep Learning을 구현해 보고자 한다면 [Tensorflow.js](https://js.tensorflow.org/)라는 도구를 추천하고 싶다. 이는 Python이나 C++로 작성된 Tensorflow와 방식으로 개발할 수 있는 라이브러리로, 미리 학습된 데이터를 활용할 수도 있으며, [Github에 훌륭한 예제](https://github.com/tensorflow/tfjs-examples)도 공개되어 있다. Javascript는 웹 환경에서의 인공지능 서비스와 애플리케이션을 작성하는 좋은 도구가 될 수 있을 것이라 생각한다. 그리고 웹환경에서의 인공지능을 시작하는데 있어서 이 글과 이 글에서 소개한 시도가 Python이 아니어도 Deep Learning 애플리케이션을 개발할 수 있다는 작은 용기가 되길 희망한다.
